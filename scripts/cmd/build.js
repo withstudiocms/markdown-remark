@@ -2,7 +2,6 @@ import fs from 'node:fs/promises';
 import esbuild from 'esbuild';
 import glob from 'fast-glob';
 import { dim, green, red, yellow } from 'kleur/colors';
-import prebuild from './prebuild.js';
 
 /** @type {import('esbuild').BuildOptions} */
 const defaultConfig = {
@@ -12,6 +11,7 @@ const defaultConfig = {
 	target: 'node18',
 	sourcemap: false,
 	sourcesContent: false,
+	logLevel: 'info',
 };
 
 const dt = new Intl.DateTimeFormat('en-us', {
@@ -19,30 +19,16 @@ const dt = new Intl.DateTimeFormat('en-us', {
 	minute: '2-digit',
 });
 
-function getPreBuilds(isDev, args) {
-	let preBuilds = [];
-	while (args.includes('--prebuild')) {
-		let idx = args.indexOf('--prebuild');
-		preBuilds.push(args[idx + 1]);
-		args.splice(idx, 2);
-	}
-	if (preBuilds.length && isDev) {
-		preBuilds.unshift('--no-minify');
-	}
-	return preBuilds;
-}
-
 export default async function build(...args) {
 	const config = Object.assign({}, defaultConfig);
 	const isDev = args.slice(-1)[0] === 'IS_DEV';
-	const preBuilds = getPreBuilds(isDev, args);
 	const patterns = args
 		.filter((f) => !!f) // remove empty args
 		.map((f) => f.replace(/^'/, '').replace(/'$/, '')); // Needed for Windows: glob strings contain surrounding string chars??? remove these
-	let entryPoints = [].concat(
+	const entryPoints = [].concat(
 		...(await Promise.all(
-			patterns.map((pattern) => glob(pattern, { filesOnly: true, absolute: true })),
-		)),
+			patterns.map((pattern) => glob(pattern, { filesOnly: true, absolute: true }))
+		))
 	);
 
 	const noClean = args.includes('--no-clean-dist');
@@ -81,16 +67,13 @@ export default async function build(...args) {
 		name: 'astro:rebuild',
 		setup(build) {
 			build.onEnd(async (result) => {
-				if (preBuilds.length) {
-					await prebuild(...preBuilds);
-				}
 				const date = dt.format(new Date());
-				if (result && result.errors.length) {
+				if (result?.errors.length) {
 					console.error(dim(`[${date}] `) + red(error || result.errors.join('\n')));
 				} else {
 					if (result.warnings.length) {
 						console.info(
-							dim(`[${date}] `) + yellow('! updated with warnings:\n' + result.warnings.join('\n')),
+							dim(`[${date}] `) + yellow(`! updated with warnings:\n${result.warnings.join('\n')}`)
 						);
 					}
 					console.info(dim(`[${date}] `) + green('√ updated'));
@@ -111,7 +94,7 @@ export default async function build(...args) {
 	await builder.watch();
 
 	process.on('beforeExit', () => {
-		builder.stop && builder.stop();
+		builder.stop?.();
 	});
 }
 
@@ -151,13 +134,13 @@ async function getInternalPackageVersion(path) {
 
 async function getWorkspacePackageVersion(packageName) {
 	const { dependencies, devDependencies } = await readPackageJSON(
-		new URL('../../package.json', import.meta.url),
+		new URL('../../package.json', import.meta.url)
 	);
 	const deps = { ...dependencies, ...devDependencies };
 	const version = deps[packageName];
 	if (!version) {
 		throw new Error(
-			`Unable to resolve "${packageName}". Is it a dependency of the workspace root?`,
+			`Unable to resolve "${packageName}". Is it a dependency of the workspace root?`
 		);
 	}
 	return version.replace(/^\D+/, '');
