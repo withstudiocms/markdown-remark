@@ -4,8 +4,8 @@ import { createMarkdownProcessor, createShikiHighlighter } from '../dist/index.j
 describe('shiki syntax highlighting', () => {
 	it('does not add is:raw to the output', async () => {
 		const processor = await createMarkdownProcessor();
-		const { raw } = await processor.render('```\ntest\n```');
-		expect(raw).not.toContain('is:raw');
+		const { code } = await processor.render('```\ntest\n```');
+		expect(code).not.toContain('is:raw');
 	});
 
 	it('supports light/dark themes', async () => {
@@ -17,15 +17,15 @@ describe('shiki syntax highlighting', () => {
 				},
 			},
 		});
-		const { raw } = await processor.render('```\ntest\n```');
+		const { code } = await processor.render('```\ntest\n```');
 
 		// light theme is there:
-		expect(raw).toMatch(/background-color:/);
-		expect(raw).toMatch(/github-light/);
+		expect(code).toMatch(/background-color:/);
+		expect(code).toMatch(/github-light/);
 
 		// dark theme is there:
-		expect(raw).toMatch(/--shiki-dark-bg:/);
-		expect(raw).toMatch(/github-dark/);
+		expect(code).toMatch(/--shiki-dark-bg:/);
+		expect(code).toMatch(/github-dark/);
 	});
 
 	it('createShikiHighlighter works', async () => {
@@ -100,9 +100,9 @@ describe('shiki syntax highlighting', () => {
 				defaultColor: false,
 			},
 		});
-		const { raw } = await processor.render('```\ntest\n```');
+		const { code } = await processor.render('```\ntest\n```');
 
-		expect(raw).not.toMatch(/color:/);
+		expect(code).not.toMatch(/color:/);
 	});
 
 	it('the highlighter supports lang alias', async () => {
@@ -128,8 +128,8 @@ describe('shiki syntax highlighting', () => {
 			},
 		});
 
-		const { raw } = await processor.render('```cjs\nlet foo = "bar"\n```');
+		const { code } = await processor.render('```cjs\nlet foo = "bar"\n```');
 
-		expect(raw).toMatch(/data-language="cjs"/);
+		expect(code).toMatch(/data-language="cjs"/);
 	});
 });

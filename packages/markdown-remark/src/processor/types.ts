@@ -71,8 +71,8 @@ export interface MarkdownProcessorRenderOptions {
 }
 
 export interface MarkdownProcessorRenderResult {
-	raw: string;
-	html: HTMLString;
+	code: string;
+	astroHTML: HTMLString;
 	metadata: {
 		headings: MarkdownHeading[];
 		imagePaths: string[];

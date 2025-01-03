@@ -13,12 +13,12 @@ describe('collect images', () => {
 		const fileURL = 'file.md';
 
 		const {
-			raw,
+			code,
 			metadata: { imagePaths },
 			// @ts-expect-error - fileURL is for internal testing and usage
 		} = await processor.render(markdown, { fileURL });
 
-		expect(raw).toBe(
+		expect(code).toBe(
 			'<p>Hello <img src="./img.png" alt="inline image url" __ASTRO_IMAGE_="{&#x22;src&#x22;:&#x22;./img.png&#x22;,&#x22;alt&#x22;:&#x22;inline image url&#x22;,&#x22;index&#x22;:0}"></p>'
 		);
 
@@ -30,9 +30,9 @@ describe('collect images', () => {
 		const fileURL = 'file.md';
 
 		// @ts-expect-error - fileURL is for internal testing and usage
-		const { raw, metadata } = await processor.render(markdown, { fileURL });
+		const { code, metadata } = await processor.render(markdown, { fileURL });
 
-		expect(raw).toBe(
+		expect(code).toBe(
 			'<p>Hello <img src="./img.webp" alt="image ref" __ASTRO_IMAGE_="{&#x22;src&#x22;:&#x22;./img.webp&#x22;,&#x22;alt&#x22;:&#x22;image ref&#x22;,&#x22;index&#x22;:0}"></p>'
 		);
 

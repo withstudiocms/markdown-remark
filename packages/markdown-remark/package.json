@@ -13,12 +13,19 @@
     "homepage": "https://studiocms.dev",
     "main": "./dist/index.js",
     "exports": {
-      ".": "./dist/index.js"
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./processor": {
+        "types": "./dist/processor/index.d.ts",
+        "default": "./dist/processor/index.js"
+      }
     },
     "imports": {
       "#import-plugin": {
-        "browser": "./dist/import-plugin-browser.js",
-        "default": "./dist/import-plugin-default.js"
+        "browser": "./dist/processor/import-plugin-browser.js",
+        "default": "./dist/processor/import-plugin-default.js"
       }
     },
     "files": [
@@ -28,10 +35,16 @@
       "prepublish": "pnpm build",
       "build": "run-scripts build \"src/**/*.ts\" && tsc -p tsconfig.json",
       "build:ci": "run-scripts build \"src/**/*.ts\"",
-      "dev": "run-scripts dev \"src/**/*.ts\""
+      "dev": "run-scripts dev \"src/**/*.ts\"",
+      "test": "pnpm build && vitest run",
+      "test:ci": "vitest"
+    },
+    "peerDependencies": {
+        "astro": "^5.0.0"
     },
     "dependencies": {
       "@astrojs/prism": "^3.2.0",
+      "astro-integration-kit": "^0.18.0",
       "github-slugger": "^2.0.0",
       "hast-util-from-html": "^2.0.3",
       "hast-util-to-text": "^4.0.2",
