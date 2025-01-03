@@ -37,7 +37,7 @@
       "build:ci": "run-scripts build \"src/**/*.ts\"",
       "dev": "run-scripts dev \"src/**/*.ts\"",
       "test": "pnpm build && vitest run",
-      "test:ci": "vitest"
+      "test:ci": "vitest --reporter=github-actions --reporter=basic"
     },
     "peerDependencies": {
         "astro": "^5.0.0"
