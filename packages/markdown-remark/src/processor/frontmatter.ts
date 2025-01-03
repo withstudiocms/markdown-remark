@@ -40,6 +40,25 @@ export interface ParseFrontmatterResult {
 	content: string;
 }
 
+/**
+ * Parses the frontmatter from a given code string.
+ *
+ * @param code - The code string containing the frontmatter.
+ * @param options - Optional settings for parsing the frontmatter.
+ * @returns An object containing the parsed frontmatter, raw frontmatter string, and the content without frontmatter.
+ *
+ * The `options` parameter can have the following properties:
+ * - `frontmatter`: Determines how the frontmatter should be handled in the content.
+ *   - 'preserve': Keeps the frontmatter in the content.
+ *   - 'remove': Removes the frontmatter from the content.
+ *   - 'empty-with-spaces': Replaces the frontmatter with spaces in the content.
+ *   - 'empty-with-lines': Replaces the frontmatter with empty lines in the content.
+ *
+ * The returned object has the following properties:
+ * - `frontmatter`: The parsed frontmatter as an object.
+ * - `rawFrontmatter`: The raw frontmatter string.
+ * - `content`: The content string without the frontmatter.
+ */
 export function parseFrontmatter(
 	code: string,
 	options?: ParseFrontmatterOptions

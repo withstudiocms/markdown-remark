@@ -70,6 +70,24 @@ const cssVariablesTheme = () =>
 		variablePrefix: '--astro-code-',
 	}));
 
+/**
+ * Creates a Shiki highlighter with the specified options.
+ *
+ * @param {CreateShikiHighlighterOptions} options - The options for creating the Shiki highlighter.
+ * @param {string[]} [options.langs=[]] - The languages to load for the highlighter.
+ * @param {string} [options.theme='github-dark'] - The default theme to use for highlighting.
+ * @param {Record<string, string>} [options.themes={}] - Additional themes to load.
+ * @param {Record<string, string>} [options.langAlias={}] - Language aliases for the highlighter.
+ * @returns {Promise<ShikiHighlighter>} A promise that resolves to the Shiki highlighter.
+ *
+ * @example
+ * const highlighter = await createShikiHighlighter({
+ *   langs: ['javascript', 'typescript'],
+ *   theme: 'nord',
+ *   themes: { light: 'github-light', dark: 'github-dark' },
+ *   langAlias: { js: 'javascript' },
+ * });
+ */
 export async function createShikiHighlighter({
 	langs = [],
 	theme = 'github-dark',

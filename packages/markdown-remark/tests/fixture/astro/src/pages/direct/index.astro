@@ -1,0 +1,29 @@
+---
+import {
+	type MarkdownProcessorRenderOptions,
+	createMarkdownProcessor,
+} from '@studiocms/markdown-remark';
+
+const processor = await createMarkdownProcessor();
+
+async function render(content: string, options?: MarkdownProcessorRenderOptions) {
+	const result = await processor.render(content, options);
+
+	return {
+		html: result.astroHTML,
+		meta: result.metadata,
+	};
+}
+
+const content = await render('# Hello World!');
+---
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Test - Basic</title>
+    </head>
+    <body>
+        {content.html}
+    </body>
+</html>

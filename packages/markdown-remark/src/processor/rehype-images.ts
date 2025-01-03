@@ -1,6 +1,16 @@
 import { visit } from 'unist-util-visit';
 import type { VFile } from 'vfile';
 
+/**
+ * A rehype plugin to process image elements in the AST.
+ *
+ * This plugin decodes the `src` attribute of `img` elements and checks if the image path is included
+ * in the `astro.imagePaths` array of the VFile's data. If the image path is found, it adds a
+ * `__ASTRO_IMAGE_` property to the `img` element's properties, which contains a JSON string with
+ * the original properties and an occurrence index. The original properties are then removed.
+ *
+ * @returns A function that processes the AST and VFile.
+ */
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function rehypeImages(): () => (tree: any, file: VFile) => void {
 	return () =>

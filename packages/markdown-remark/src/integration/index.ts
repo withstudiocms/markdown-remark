@@ -2,6 +2,30 @@ import type { AstroIntegration } from 'astro';
 import { addVirtualImports, createResolver } from 'astro-integration-kit';
 import { shared } from './shared.js';
 
+/**
+ * The `markdownRemark` function creates an Astro integration for handling Markdown files.
+ *
+ * @returns {AstroIntegration} The Astro integration object.
+ *
+ * @remarks
+ * This integration sets up virtual imports for Markdown processing and injects TypeScript types.
+ *
+ * @example
+ * ```typescript
+ * import { markdownRemark } from '@studiocms/markdown-remark';
+ *
+ * export default {
+ *   integrations: [markdownRemark()],
+ * };
+ * ```
+ *
+ * @hook
+ * - `astro:config:setup` - Adds virtual imports for Markdown processing.
+ * - `astro:config:done` - Injects TypeScript types for the Markdown integration.
+ *
+ * @internal
+ * The `resolve` function is used to resolve the path to the `markdown.js` file.
+ */
 export function markdownRemark(): AstroIntegration {
 	const { resolve } = createResolver(import.meta.url);
 	return {

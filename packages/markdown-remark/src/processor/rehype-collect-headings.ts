@@ -9,6 +9,19 @@ import type { MarkdownHeading, RehypePlugin } from './types.js';
 const rawNodeTypes = new Set(['text', 'raw', 'mdxTextExpression']);
 const codeTagNames = new Set(['code', 'pre']);
 
+/**
+ * A rehype plugin that collects headings from a Markdown or MDX file and assigns unique IDs to them.
+ * The collected headings are stored in the file's `astro` data property.
+ *
+ * @returns A function that processes the syntax tree and file data.
+ *
+ * The function performs the following steps:
+ * 1. Initializes an empty array to store headings and retrieves the frontmatter and file type.
+ * 2. Traverses the syntax tree to find heading elements (`h1` to `h6`).
+ * 3. Extracts the text content from each heading, handling raw nodes and MDX expressions.
+ * 4. Generates a unique slug for each heading and assigns it as the `id` property.
+ * 5. Stores the collected headings in the file's `astro.headings` property.
+ */
 export function rehypeHeadingIds(): ReturnType<RehypePlugin> {
 	return (tree, file) => {
 		const headings: MarkdownHeading[] = [];

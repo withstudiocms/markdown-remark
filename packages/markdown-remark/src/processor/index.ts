@@ -58,7 +58,27 @@ export const markdownConfigDefaults: Required<AstroMarkdownOptions> = {
 };
 
 /**
- * Create a markdown preprocessor to render multiple markdown files
+ * Creates a Markdown processor with the specified options.
+ *
+ * @param opts - Optional configuration options for the Markdown processor.
+ * @returns A promise that resolves to a MarkdownProcessor instance.
+ *
+ * @remarks
+ * The processor uses unified to parse and transform Markdown content. It supports various plugins for syntax highlighting,
+ * remark and rehype transformations, and image handling.
+ *
+ * @example
+ * ```typescript
+ * const processor = await createMarkdownProcessor({
+ *   syntaxHighlight: 'shiki',
+ *   gfm: true,
+ *   smartypants: true,
+ * });
+ * const result = await processor.render('# Hello World');
+ * console.log(result.code);
+ * ```
+ *
+ * @public
  */
 export async function createMarkdownProcessor(
 	opts?: AstroMarkdownOptions
@@ -123,6 +143,14 @@ export async function createMarkdownProcessor(
 	parser.use(rehypeRaw).use(rehypeStringify, { allowDangerousHtml: true });
 
 	return {
+		/**
+		 * Renders the given markdown content using the specified rendering options.
+		 *
+		 * @param content - The markdown content to be rendered.
+		 * @param renderOpts - The options to be used for rendering, including file URL and frontmatter.
+		 * @returns A promise that resolves to a MarkdownProcessorRenderResult object containing the rendered code, HTML string, and metadata.
+		 * @throws Will throw an error if the markdown parsing fails, with the error message prefixed by the input filename.
+		 */
 		async render(content, renderOpts): Promise<MarkdownProcessorRenderResult> {
 			const vfile = new VFile({
 				value: content,
