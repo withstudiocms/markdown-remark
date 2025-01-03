@@ -1,7 +1,8 @@
 import { visit } from 'unist-util-visit';
 import type { VFile } from 'vfile';
 
-export function rehypeImages() {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function rehypeImages(): () => (tree: any, file: VFile) => void {
 	return () =>
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		(tree: any, file: VFile) => {

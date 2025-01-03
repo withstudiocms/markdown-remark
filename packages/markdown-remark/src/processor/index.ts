@@ -1,5 +1,9 @@
 import { HTMLString } from './HTMLString.js';
-import type { AstroMarkdownOptions, MarkdownProcessor } from './types.js';
+import type {
+	AstroMarkdownOptions,
+	MarkdownProcessor,
+	MarkdownProcessorRenderResult,
+} from './types.js';
 
 import { loadPlugins } from './load-plugins.js';
 import { rehypeHeadingIds } from './rehype-collect-headings.js';
@@ -119,7 +123,7 @@ export async function createMarkdownProcessor(
 	parser.use(rehypeRaw).use(rehypeStringify, { allowDangerousHtml: true });
 
 	return {
-		async render(content, renderOpts) {
+		async render(content, renderOpts): Promise<MarkdownProcessorRenderResult> {
 			const vfile = new VFile({
 				value: content,
 				path: renderOpts?.fileURL,
@@ -152,7 +156,7 @@ export async function createMarkdownProcessor(
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function prefixError(err: any, prefix: string) {
+function prefixError(err: any, prefix: string): any {
 	// If the error is an object with a `message` property, attempt to prefix the message
 	if (err?.message) {
 		try {

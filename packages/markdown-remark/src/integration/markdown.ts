@@ -2,7 +2,9 @@ import type { SSRResult } from 'astro';
 import { renderSlot } from 'astro/runtime/server/index.js';
 import type { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
 import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
+import type { HTMLString } from '../processor/HTMLString.js';
 import {
+	type MarkdownHeading,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
 } from '../processor/index.js';
@@ -12,7 +14,20 @@ const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
 });
 
-export async function render(content: string, options: MarkdownProcessorRenderOptions) {
+export interface RenderResponse {
+	html: HTMLString;
+	meta: {
+		headings: MarkdownHeading[];
+		imagePaths: string[];
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		frontmatter: Record<string, any>;
+	};
+}
+
+export async function render(
+	content: string,
+	options: MarkdownProcessorRenderOptions
+): Promise<RenderResponse> {
 	const result = await processor.render(content, options);
 
 	return {

@@ -25,6 +25,7 @@ export function markdownRemark(): AstroIntegration {
 						export const render: typeof import('${resolve('./markdown.js')}').render;
 						export const Markdown: typeof import('${resolve('./markdown.js')}').Markdown;
 						export type Props = import('${resolve('./markdown.js')}').Props;
+						export type RenderResponse = import('${resolve('./markdown.js')}').RenderResponse;
 					}
                     `,
 				});

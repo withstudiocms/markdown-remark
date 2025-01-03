@@ -72,7 +72,7 @@ export function rehypeHeadingIds(): ReturnType<RehypePlugin> {
 	};
 }
 
-function isMDXFile(file: VFile) {
+function isMDXFile(file: VFile): boolean {
 	return Boolean(file.history[0]?.endsWith('.mdx'));
 }
 
@@ -112,8 +112,12 @@ function getMdxFrontmatterVariablePath(node: MdxTextExpression): string[] | Erro
 	return expressionPath.reverse();
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function getMdxFrontmatterVariableValue(frontmatter: Record<string, any>, path: string[]) {
+function getMdxFrontmatterVariableValue(
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	frontmatter: Record<string, any>,
+	path: string[]
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+): Record<string, any> | undefined {
 	let value = frontmatter;
 
 	for (const key of path) {

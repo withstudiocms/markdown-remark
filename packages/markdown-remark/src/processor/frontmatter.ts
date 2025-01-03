@@ -1,7 +1,7 @@
 import yaml from 'js-yaml';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export function isFrontmatterValid(frontmatter: Record<string, any>) {
+export function isFrontmatterValid(frontmatter: Record<string, any>): boolean {
 	try {
 		// ensure frontmatter is JSON-serializable
 		JSON.stringify(frontmatter);

@@ -3,7 +3,8 @@ import { definitions } from 'mdast-util-definitions';
 import { visit } from 'unist-util-visit';
 import type { VFile } from 'vfile';
 
-export function remarkCollectImages() {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function remarkCollectImages(): (tree: any, vfile: VFile) => void {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	return (tree: any, vfile: VFile) => {
 		if (typeof vfile?.path !== 'string') return;

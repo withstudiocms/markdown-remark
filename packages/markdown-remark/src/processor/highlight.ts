@@ -21,7 +21,7 @@ const languagePattern = /\blanguage-(\S+)\b/;
  *   A function which receives the code and language, and returns the HTML of a syntax
  *   highlighted `<pre>` element.
  */
-export async function highlightCodeBlocks(tree: Root, highlighter: Highlighter) {
+export async function highlightCodeBlocks(tree: Root, highlighter: Highlighter): Promise<void> {
 	const nodes: Array<{
 		node: Element;
 		language: string;
