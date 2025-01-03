@@ -7,5 +7,6 @@ export default defineProject({
 	test: {
 		maxConcurrency: 1,
 		name: '@studiocms/markdown-remark',
+		setupFiles: ['./tests/vitest.setup.ts'],
 	},
 });

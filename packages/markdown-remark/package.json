@@ -62,10 +62,10 @@
       "unist-util-remove-position": "^5.0.0",
       "unist-util-visit": "^5.0.0",
       "unist-util-visit-parents": "^6.0.1",
-      "vfile": "^6.0.3",
-      "vitest": "^2.1.8"
+      "vfile": "^6.0.3"
     },
     "devDependencies": {
+      "@inox-tools/astro-tests": "^0.2.2",
       "@types/estree": "^1.0.6",
       "@types/hast": "^3.0.4",
       "@types/js-yaml": "^4.0.9",
@@ -74,7 +74,9 @@
       "run-scripts": "workspace:*",
       "esbuild": "^0.21.5",
       "fast-glob": "^3.3.2",
-      "mdast-util-mdx-expression": "^2.0.1"
+      "mdast-util-mdx-expression": "^2.0.1",
+      "jest-extended": "^4.0.2",
+      "vitest": "^2.1.8"
     },
     "publishConfig": {
       "provenance": true
