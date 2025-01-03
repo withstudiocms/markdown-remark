@@ -1,0 +1,16 @@
+---
+import { render } from 'studiocms:markdown-remark';
+import content from './_md/md.txt?raw';
+
+const { html } = await render(content);
+---
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Test - Basic</title>
+    </head>
+    <body>
+        {html}
+    </body>
+</html>

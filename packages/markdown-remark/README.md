@@ -68,6 +68,26 @@ import { Markdown } from 'studiocms:markdown-remark';
 </html>
 ```
 
+OR
+
+```astro
+---
+import { render } from 'studiocms:markdown-remark';
+
+const { html } = render('# Hello World!')
+---
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Example</title>
+    </head>
+    <body>
+        {html}
+    </body>
+</html>
+```
+
 ### Using the markdown processor directly
 
 **`src/utils/render.ts`**
