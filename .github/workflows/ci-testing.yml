@@ -1,0 +1,39 @@
+name: CI - Tests PRs & Main
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'packages/**'
+      - 'vitest.workspace.ts'
+    branches: [main]
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'vitest.workspace.ts'
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+permissions:
+  contents: write
+
+concurrency: testing-${{ github.ref }}
+
+jobs:
+    test:
+      name: Vitest Test
+      runs-on: ubuntu-latest
+      env:
+        NODE_OPTIONS: "--max_old_space_size=4096"
+      steps:
+        - name: Check out code using Git
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+  
+        - name: Install Tools & Dependencies
+          uses: withstudiocms/automations/.github/actions/install@main
+  
+        - name: Build and Test Packages
+          run: pnpm ci:test
