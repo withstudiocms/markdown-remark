@@ -5,14 +5,14 @@ const fixture = await loadFixture({
 	root: './fixture/astro',
 });
 
-describe('Swash Astro Integration Tests', () => {
+describe('Markdown-Remark Astro Integration Tests', () => {
 	beforeAll(async () => {
 		await fixture.build({});
 	});
 
-	// afterAll(async () => {
-	// 	await fixture.clean();
-	// });
+	afterAll(async () => {
+		await fixture.clean();
+	});
 
 	test('Basic Component Tests', async () => {
 		const content = await fixture.readFile('basic/index.html');

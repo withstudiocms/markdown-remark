@@ -1,16 +1,4 @@
-import { HTMLString } from './HTMLString.js';
-import type {
-	AstroMarkdownOptions,
-	MarkdownProcessor,
-	MarkdownProcessorRenderResult,
-} from './types.js';
-
-import { loadPlugins } from './load-plugins.js';
-import { rehypeHeadingIds } from './rehype-collect-headings.js';
-import { rehypePrism } from './rehype-prism.js';
-import { rehypeShiki } from './rehype-shiki.js';
-import { remarkCollectImages } from './remark-collect-images.js';
-
+import rehypeAutoLink from 'rehype-autolink-headings';
 import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
 import remarkGfm from 'remark-gfm';
@@ -19,9 +7,22 @@ import remarkRehype from 'remark-rehype';
 import remarkSmartypants from 'remark-smartypants';
 import { unified } from 'unified';
 import { VFile } from 'vfile';
+import { HTMLString } from './HTMLString.js';
+import { loadPlugins } from './load-plugins.js';
+import { rehypeAutolinkOptions } from './rehype-autolink-headings.js';
+import { rehypeHeadingIds } from './rehype-collect-headings.js';
 import { rehypeImages } from './rehype-images.js';
+import { rehypePrism } from './rehype-prism.js';
+import { rehypeShiki } from './rehype-shiki.js';
+import { remarkCollectImages } from './remark-collect-images.js';
+import type {
+	AstroMarkdownOptions,
+	MarkdownProcessor,
+	MarkdownProcessorRenderResult,
+} from './types.js';
 
-import { rehypeAutolinkHeadings, styleTag } from './rehype-autolink-headings.js';
+export { rehypeAutoLink };
+export { rehypeAutolinkOptions } from './rehype-autolink-headings.js';
 export { rehypeHeadingIds } from './rehype-collect-headings.js';
 export { remarkCollectImages } from './remark-collect-images.js';
 export { rehypePrism } from './rehype-prism.js';
@@ -97,12 +98,15 @@ export async function createMarkdownProcessor(
 	const loadedRemarkPlugins = await Promise.all(loadPlugins(remarkPlugins));
 	const loadedRehypePlugins = await Promise.all(loadPlugins(rehypePlugins));
 
+	// Initialize the parser
 	const parser = unified().use(remarkParse);
 
-	// gfm and smartypants
+	// gfm
 	if (gfm) {
 		parser.use(remarkGfm);
 	}
+
+	// smartypants
 	if (smartypants) {
 		parser.use(remarkSmartypants);
 	}
@@ -140,7 +144,8 @@ export async function createMarkdownProcessor(
 	// Headings
 	parser.use(rehypeHeadingIds);
 
-	parser.use(rehypeAutolinkHeadings[0], rehypeAutolinkHeadings[1]);
+	// Autolink headings
+	parser.use(rehypeAutoLink, rehypeAutolinkOptions);
 
 	// Stringify to HTML
 	parser.use(rehypeRaw).use(rehypeStringify, { allowDangerousHtml: true });
@@ -168,14 +173,14 @@ export async function createMarkdownProcessor(
 			const result = await parser.process(vfile).catch((err) => {
 				// Ensure that the error message contains the input filename
 				// to make it easier for the user to fix the issue
-				err = prefixError(err, `Failed to parse Markdown file "${vfile.path}"`);
-				console.error(err);
-				throw err;
+				const newErr = prefixError(err, `Failed to parse Markdown file "${vfile.path}"`);
+				console.error(newErr);
+				throw newErr;
 			});
 
 			return {
 				code: String(result.value),
-				astroHTML: new HTMLString(styleTag + result.value),
+				astroHTML: new HTMLString(result.value),
 				metadata: {
 					headings: result.data.astro?.headings ?? [],
 					imagePaths: result.data.astro?.imagePaths ?? [],

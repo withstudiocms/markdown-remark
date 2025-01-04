@@ -1,32 +1,28 @@
 import type { AstroIntegration } from 'astro';
 import { addVirtualImports, createResolver } from 'astro-integration-kit';
+import { z } from 'astro/zod';
 import { shared } from './shared.js';
 
+const MarkdownRemarkOptionsSchema = z
+	.object({
+		/**
+		 * Inject CSS for Rehype autolink headings styles.
+		 */
+		injectCSS: z.boolean().optional().default(true),
+	})
+	.optional()
+	.default({});
+
+export type MarkdownRemarkOptions = typeof MarkdownRemarkOptionsSchema._input;
+
 /**
- * The `markdownRemark` function creates an Astro integration for handling Markdown files.
+ * Integrates the Markdown Remark processor into Astro available as `studiocms:markdown-remark`.
  *
- * @returns {AstroIntegration} The Astro integration object.
- *
- * @remarks
- * This integration sets up virtual imports for Markdown processing and injects TypeScript types.
- *
- * @example
- * ```typescript
- * import { markdownRemark } from '@studiocms/markdown-remark';
- *
- * export default {
- *   integrations: [markdownRemark()],
- * };
- * ```
- *
- * @hook
- * - `astro:config:setup` - Adds virtual imports for Markdown processing.
- * - `astro:config:done` - Injects TypeScript types for the Markdown integration.
- *
- * @internal
- * The `resolve` function is used to resolve the path to the `markdown.js` file.
+ * @param {MarkdownRemarkOptions} opts Options for the Markdown Remark processor.
+ * @returns Astro integration.
  */
-export function markdownRemark(): AstroIntegration {
+export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
+	const { injectCSS } = MarkdownRemarkOptionsSchema.parse(opts);
 	const { resolve } = createResolver(import.meta.url);
 	return {
 		name: '@studiocms/markdown-remark',
@@ -36,8 +32,15 @@ export function markdownRemark(): AstroIntegration {
 					name: '@studiocms/markdown-remark',
 					imports: {
 						'studiocms:markdown-remark': `export * from '${resolve('./markdown.js')}';`,
+						'studiocms:markdown-remark/css': `
+							import '${resolve('../../assets/headings.css')}'
+						`,
 					},
 				});
+
+				if (injectCSS) {
+					params.injectScript('page-ssr', 'import "studiocms:markdown-remark/css";');
+				}
 			},
 			'astro:config:done'({ injectTypes, config }) {
 				shared.markdownConfig = config.markdown;
