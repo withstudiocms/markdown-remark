@@ -32,6 +32,9 @@ importers:
       pkg-pr-new:
         specifier: ^0.0.39
         version: 0.0.39
+      run-scripts:
+        specifier: workspace:*
+        version: link:scripts
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -150,9 +153,6 @@ importers:
       mdast-util-mdx-expression:
         specifier: ^2.0.1
         version: 2.0.1
-      run-scripts:
-        specifier: workspace:*
-        version: link:../../scripts
       vitest:
         specifier: ^2.1.8
         version: 2.1.8(@types/node@18.19.69)
