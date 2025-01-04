@@ -21,6 +21,7 @@ import { unified } from 'unified';
 import { VFile } from 'vfile';
 import { rehypeImages } from './rehype-images.js';
 
+import { rehypeAutolinkHeadings, styleTag } from './rehype-autolink-headings.js';
 export { rehypeHeadingIds } from './rehype-collect-headings.js';
 export { remarkCollectImages } from './remark-collect-images.js';
 export { rehypePrism } from './rehype-prism.js';
@@ -139,6 +140,8 @@ export async function createMarkdownProcessor(
 	// Headings
 	parser.use(rehypeHeadingIds);
 
+	parser.use(rehypeAutolinkHeadings[0], rehypeAutolinkHeadings[1]);
+
 	// Stringify to HTML
 	parser.use(rehypeRaw).use(rehypeStringify, { allowDangerousHtml: true });
 
@@ -172,7 +175,7 @@ export async function createMarkdownProcessor(
 
 			return {
 				code: String(result.value),
-				astroHTML: new HTMLString(result.value),
+				astroHTML: new HTMLString(styleTag + result.value),
 				metadata: {
 					headings: result.data.astro?.headings ?? [],
 					imagePaths: result.data.astro?.imagePaths ?? [],
