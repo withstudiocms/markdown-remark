@@ -1,17 +1,17 @@
 {
-    "name": "@markdown-remark/tests",
-    "version": "0.0.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-      "astro": "astro",
-      "build": "astro build",
-      "preview": "astro preview",
-      "test:dev": "astro dev",
-      "test:build": "pnpm build && pnpm preview"
-    },
-    "dependencies": {
-      "@studiocms/markdown-remark": "workspace:*",
-      "astro": "^5.1.2"
-    }
+  "name": "@markdown-remark/tests",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "astro": "astro",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test:dev": "astro dev",
+    "test:build": "pnpm build && pnpm preview"
+  },
+  "dependencies": {
+    "@studiocms/markdown-remark": "workspace:*",
+    "astro": "^5.1.2"
   }
+}
