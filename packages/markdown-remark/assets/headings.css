@@ -54,7 +54,7 @@
 .anchor-link:focus {
 	opacity: 1;
 }
-
+/* 
 @media (min-width: 95em) {
 	.heading-wrapper {
 		display: flex;
@@ -68,4 +68,4 @@
 	.anchor-link {
 		margin: 0;
 	}
-}
+} */

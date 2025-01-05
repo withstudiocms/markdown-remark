@@ -36,7 +36,8 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 		const content = await fixture.readFile('direct/index.html');
 
 		expect(content).toContain(
-			`<div tabindex="-1" class="heading-wrapper level-h1"><h1 id="hello-world">Hello World!</h1><a class="anchor-link" href="#hello-world"><span aria-hidden="true" class="anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path></svg></span><span is:raw="" class="sr-only">'Read the “', Hello World!, '” section'</span></a></div>`
+			`<div tabindex="-1" class="heading-wrapper level-h1"><h1 id="hello-world">Hello World!</h1><a class="anchor-link" href="#hello-world"><span aria-hidden="true" class="anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path></svg></span><span is:raw="" class="sr-only">'Read the “', Hello World!, '” section'</span></a></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>`
 		);
 	});
 
@@ -152,7 +153,7 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 			expect(
 				content
 			).toContain(`<div tabindex="-1" class="heading-wrapper level-h2"><h2 id="inline-code">Inline code</h2><a class="anchor-link" href="#inline-code"><span aria-hidden="true" class="anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path></svg></span><span is:raw="" class="sr-only">'Read the “', Inline code, '” section'</span></a></div>
-<p>This web site is using <code>@studiocms/markdown-remark</code>.</p> </body></html>`);
+<p>This web site is using <code>@studiocms/markdown-remark</code>.</p>`);
 		});
 	});
 });

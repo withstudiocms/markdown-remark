@@ -1,14 +1,8 @@
 ---
 import { Markdown } from 'studiocms:markdown-remark';
+import Layout from '../../layouts/layout.astro';
 import content from './_md/md.txt?raw';
 ---
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>Test - Syntax Test</title>
-    </head>
-    <body>
-        <Markdown content={content} />
-    </body>
-</html>
+<Layout title="Syntax Test">
+    <Markdown content={content} />
+</Layout>
