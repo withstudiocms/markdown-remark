@@ -3,6 +3,6 @@ import type * as unified from 'unified';
 
 // In the browser, we can try to do a plain import
 export async function importPlugin(p: string): Promise<unified.Plugin> {
-	const importResult = await import(p);
+	const importResult = await import(/* @vite-ignore */ p);
 	return importResult.default;
 }

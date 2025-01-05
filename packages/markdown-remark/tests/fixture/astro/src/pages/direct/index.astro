@@ -3,6 +3,8 @@ import {
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
 } from '@studiocms/markdown-remark';
+import Layout from '../../layouts/layout.astro';
+import contentRaw from './_md/md.txt?raw';
 
 const processor = await createMarkdownProcessor();
 
@@ -15,15 +17,8 @@ async function render(content: string, options?: MarkdownProcessorRenderOptions)
 	};
 }
 
-const content = await render('# Hello World!');
+const content = await render(contentRaw);
 ---
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>Test - Basic</title>
-    </head>
-    <body>
-        {content.html}
-    </body>
-</html>
+<Layout title="Direct">
+    {content.html}
+</Layout>
