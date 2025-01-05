@@ -54,18 +54,3 @@
 .anchor-link:focus {
 	opacity: 1;
 }
-/* 
-@media (min-width: 95em) {
-	.heading-wrapper {
-		display: flex;
-		flex-direction: row-reverse;
-		justify-content: flex-end;
-		gap: var(--icon-spacing);
-		margin-inline-start: calc(-1 * var(--icon-size) + var(--icon-spacing));
-	}
-
-	.heading-wrapper > :first-child,
-	.anchor-link {
-		margin: 0;
-	}
-} */
