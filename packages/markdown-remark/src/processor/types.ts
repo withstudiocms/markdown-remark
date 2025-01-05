@@ -55,6 +55,12 @@ export interface AstroMarkdownOptions {
 	smartypants?: boolean;
 }
 
+export interface StudioCMSMarkdownOptions extends AstroMarkdownOptions {
+	callouts: {
+		theme: 'github' | 'obsidian' | 'vitepress';
+	};
+}
+
 export interface MarkdownProcessor {
 	render: (
 		content: string,

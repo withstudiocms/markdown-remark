@@ -59,6 +59,9 @@ importers:
       hast-util-from-html:
         specifier: ^2.0.3
         version: 2.0.3
+      hast-util-is-element:
+        specifier: ^3.0.0
+        version: 3.0.0
       hast-util-to-string:
         specifier: ^3.0.1
         version: 3.0.1
