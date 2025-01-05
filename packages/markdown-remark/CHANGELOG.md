@@ -1,5 +1,13 @@
 # @studiocms/markdown-remark
 
+## 0.1.1
+
+### Patch Changes
+
+- [#3](https://github.com/withstudiocms/markdown-remark/pull/3) [`74d2b32`](https://github.com/withstudiocms/markdown-remark/commit/74d2b320c9acc562f0c87f5c6cea69712bcfba88) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - Update CSS and add flags to prevent vite dynamic import warnings
+
+- [#5](https://github.com/withstudiocms/markdown-remark/pull/5) [`4beb076`](https://github.com/withstudiocms/markdown-remark/commit/4beb07632d18e05b3cece083512bdbd8197ebc31) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - Add support for github Callouts/asides
+
 ## 0.1.0
 
 ### Minor Changes
