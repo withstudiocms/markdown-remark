@@ -12,6 +12,9 @@ import { shared } from './shared.js';
 
 const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
+	callouts: {
+		theme: 'obsidian',
+	},
 });
 
 /**
