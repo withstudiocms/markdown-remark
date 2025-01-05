@@ -25,8 +25,6 @@ import type { UserOptions } from './types.js';
  *   Optional options to configure the output.
  * @returns
  *   A unified transformer.
- *
- * @see https://github.com/lin-stephanie/rehype-callouts
  */
 const rehypeCallouts: Plugin<[UserOptions?], Root> = (options) => {
 	const config = getConfig(options);

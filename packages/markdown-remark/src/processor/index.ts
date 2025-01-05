@@ -24,6 +24,13 @@ import type {
 
 export { rehypeAutoLink };
 export { rehypeAutolinkOptions } from './rehype-autolink-headings.js';
+export {
+	default as rehypeCallouts,
+	type CalloutConfig,
+	type HtmlTagNamesConfig,
+	type RehypeCalloutsOptions,
+	type UserOptions,
+} from './callouts/index.js';
 export { rehypeHeadingIds } from './rehype-collect-headings.js';
 export { remarkCollectImages } from './remark-collect-images.js';
 export { rehypePrism } from './rehype-prism.js';
