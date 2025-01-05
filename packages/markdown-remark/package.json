@@ -78,8 +78,8 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/unist": "^3.0.3",
-    "esbuild": "^0.21.5",
-    "fast-glob": "^3.3.2",
+    "esbuild": "^0.24.2",
+    "fast-glob": "^3.3.3",
     "mdast-util-mdx-expression": "^2.0.1",
     "jest-extended": "^4.0.2",
     "vitest": "^2.1.8"
