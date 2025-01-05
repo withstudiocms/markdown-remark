@@ -1,3 +1,12 @@
+[data-theme="dark"] .callout {
+	mix-blend-mode: lighten;
+	background-color: rgb(from var(--callout-color-dark) r g b / 0.1);
+}
+
+[data-theme="dark"] .callout-title {
+	color: var(--callout-color-dark);
+}
+
 .callout {
 	mix-blend-mode: darken;
 	background-color: rgb(from var(--callout-color-light) r g b / 0.1);
@@ -5,15 +14,6 @@
 
 .callout-title {
 	color: var(--callout-color-light);
-}
-
-.dark .callout {
-	mix-blend-mode: lighten;
-	background-color: rgb(from var(--callout-color-dark) r g b / 0.1);
-}
-
-.dark .callout-title {
-	color: var(--callout-color-dark);
 }
 
 .callout {

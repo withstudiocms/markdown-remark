@@ -1,9 +1,9 @@
-.callout {
-	background-color: rgb(from var(--callout-color-light) r g b / 0.14);
+[data-theme="dark"] .callout {
+	background-color: rgb(from var(--callout-color-dark) r g b / 0.16);
 }
 
-.dark .callout {
-	background-color: rgb(from var(--callout-color-dark) r g b / 0.16);
+.callout {
+	background-color: rgb(from var(--callout-color-light) r g b / 0.14);
 }
 
 .callout {

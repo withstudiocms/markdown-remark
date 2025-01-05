@@ -1,17 +1,17 @@
+[data-theme="dark"] .callout {
+	border-left-color: var(--callout-color-dark);
+}
+
+[data-theme="dark"] .callout-title {
+	color: var(--callout-color-dark);
+}
+
 .callout {
 	border-left-color: var(--callout-color-light);
 }
 
 .callout-title {
 	color: var(--callout-color-light);
-}
-
-.dark .callout {
-	border-left-color: var(--callout-color-dark);
-}
-
-.dark .callout-title {
-	color: var(--callout-color-dark);
 }
 
 .callout {
