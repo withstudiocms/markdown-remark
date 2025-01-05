@@ -8,6 +8,7 @@ import remarkSmartypants from 'remark-smartypants';
 import { unified } from 'unified';
 import { VFile } from 'vfile';
 import { HTMLString } from './HTMLString.js';
+import rehypeCallouts from './callouts/index.js';
 import { loadPlugins } from './load-plugins.js';
 import { rehypeAutolinkOptions } from './rehype-autolink-headings.js';
 import { rehypeHeadingIds } from './rehype-collect-headings.js';
@@ -16,13 +17,20 @@ import { rehypePrism } from './rehype-prism.js';
 import { rehypeShiki } from './rehype-shiki.js';
 import { remarkCollectImages } from './remark-collect-images.js';
 import type {
-	AstroMarkdownOptions,
 	MarkdownProcessor,
 	MarkdownProcessorRenderResult,
+	StudioCMSMarkdownOptions,
 } from './types.js';
 
 export { rehypeAutoLink };
 export { rehypeAutolinkOptions } from './rehype-autolink-headings.js';
+export {
+	default as rehypeCallouts,
+	type CalloutConfig,
+	type HtmlTagNamesConfig,
+	type RehypeCalloutsOptions,
+	type UserOptions,
+} from './callouts/index.js';
 export { rehypeHeadingIds } from './rehype-collect-headings.js';
 export { remarkCollectImages } from './remark-collect-images.js';
 export { rehypePrism } from './rehype-prism.js';
@@ -42,7 +50,7 @@ export {
 } from './shiki.js';
 export * from './types.js';
 
-export const markdownConfigDefaults: Required<AstroMarkdownOptions> = {
+export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {
 	syntaxHighlight: 'shiki',
 	shikiConfig: {
 		langs: [],
@@ -57,6 +65,9 @@ export const markdownConfigDefaults: Required<AstroMarkdownOptions> = {
 	remarkRehype: {},
 	gfm: true,
 	smartypants: true,
+	callouts: {
+		theme: 'obsidian',
+	},
 };
 
 /**
@@ -83,7 +94,7 @@ export const markdownConfigDefaults: Required<AstroMarkdownOptions> = {
  * @public
  */
 export async function createMarkdownProcessor(
-	opts?: AstroMarkdownOptions
+	opts?: StudioCMSMarkdownOptions
 ): Promise<MarkdownProcessor> {
 	const {
 		syntaxHighlight = markdownConfigDefaults.syntaxHighlight,
@@ -93,6 +104,7 @@ export async function createMarkdownProcessor(
 		remarkRehype: remarkRehypeOptions = markdownConfigDefaults.remarkRehype,
 		gfm = markdownConfigDefaults.gfm,
 		smartypants = markdownConfigDefaults.smartypants,
+		callouts = markdownConfigDefaults.callouts,
 	} = opts ?? {};
 
 	const loadedRemarkPlugins = await Promise.all(loadPlugins(remarkPlugins));
@@ -146,6 +158,9 @@ export async function createMarkdownProcessor(
 
 	// Autolink headings
 	parser.use(rehypeAutoLink, rehypeAutolinkOptions);
+
+	// Callouts
+	parser.use(rehypeCallouts, callouts);
 
 	// Stringify to HTML
 	parser.use(rehypeRaw).use(rehypeStringify, { allowDangerousHtml: true });

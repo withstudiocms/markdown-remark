@@ -32,6 +32,15 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>`);
 	});
 
+	test('Callouts test', async () => {
+		const content = await fixture.readFile('callouts/index.html');
+
+		expect(
+			content
+		).toContain(`<div dir="auto" class="callout" style="--callout-color-light: rgb(8, 109, 221); --callout-color-dark: rgb(2, 122, 255);"><div class="callout-title"><div class="callout-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5 19 9l-4-4L3.5 16.5 2 22z"></path></svg></div><div class="callout-title-inner">This is a <em>non-collapsible</em> callout</div></div><div class="callout-content"><p>Some content is displayed directly!</p></div></div>
+<details dir="auto" class="callout callout-collapsible" style="--callout-color-light: rgb(236, 117, 0); --callout-color-dark: rgb(233, 151, 63);"><summary class="callout-title"><div class="callout-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><div class="callout-title-inner">This is a <strong>collapsible</strong> callout</div><div class="callout-fold" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></div></summary><div class="callout-content"><p>Some content shown after opening!</p></div></details>`);
+	});
+
 	test('Direct Markdown Processor Tests', async () => {
 		const content = await fixture.readFile('direct/index.html');
 
@@ -121,12 +130,7 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 			expect(
 				content
 			).toContain(`<div tabindex="-1" class="heading-wrapper level-h2"><h2 id="blockquotes">Blockquotes</h2><a class="anchor-link" href="#blockquotes"><span aria-hidden="true" class="anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path></svg></span><span is:raw="" class="sr-only">'Read the “', Blockquotes, '” section'</span></a></div>
-<blockquote>
-<p>Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.</p>
-<blockquote>
-<p>Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.</p>
-</blockquote>
-</blockquote>`);
+<blockquote><p>Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.</p><blockquote><p>Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.</p></blockquote></blockquote>`);
 		});
 
 		test('Tables', async () => {

@@ -1,0 +1,8 @@
+---
+import { Markdown } from 'studiocms:markdown-remark';
+import Layout from '../../layouts/layout.astro';
+import content from './_md/md.txt?raw';
+---
+<Layout title="Callouts">
+    <Markdown content={content} />
+</Layout>

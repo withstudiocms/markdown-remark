@@ -9,6 +9,30 @@ const MarkdownRemarkOptionsSchema = z
 		 * Inject CSS for Rehype autolink headings styles.
 		 */
 		injectCSS: z.boolean().optional().default(true),
+
+		/**
+		 * Options for the Markdown processor.
+		 */
+		markdown: z
+			.object({
+				/**
+				 * Configures the callouts theme.
+				 */
+				callouts: z
+					.object({
+						/**
+						 * The theme to use for callouts.
+						 */
+						theme: z
+							.union([z.literal('github'), z.literal('obsidian'), z.literal('vitepress')])
+							.optional()
+							.default('obsidian'),
+					})
+					.optional()
+					.default({}),
+			})
+			.optional()
+			.default({}),
 	})
 	.optional()
 	.default({});
@@ -22,8 +46,13 @@ export type MarkdownRemarkOptions = typeof MarkdownRemarkOptionsSchema._input;
  * @returns Astro integration.
  */
 export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
-	const { injectCSS } = MarkdownRemarkOptionsSchema.parse(opts);
+	const { injectCSS, markdown } = MarkdownRemarkOptionsSchema.parse(opts);
 	const { resolve } = createResolver(import.meta.url);
+
+	const resolvedCalloutTheme = resolve(
+		`../../assets/callout-themes/${markdown.callouts.theme}.css`
+	);
+
 	return {
 		name: '@studiocms/markdown-remark',
 		hooks: {
@@ -33,7 +62,8 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 					imports: {
 						'studiocms:markdown-remark': `export * from '${resolve('./markdown.js')}';`,
 						'studiocms:markdown-remark/css': `
-							import '${resolve('../../assets/headings.css')}'
+							import '${resolve('../../assets/headings.css')}';
+							import '${resolvedCalloutTheme}';
 						`,
 					},
 				});
