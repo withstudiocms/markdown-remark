@@ -1,48 +1,9 @@
 import type { AstroIntegration } from 'astro';
 import { addVirtualImports, createResolver } from 'astro-integration-kit';
-import { z } from 'astro/zod';
+import { type MarkdownRemarkOptions, MarkdownRemarkOptionsSchema } from './schema.js';
 import { shared } from './shared.js';
 
-const MarkdownRemarkOptionsSchema = z
-	.object({
-		/**
-		 * Inject CSS for the Markdown processor.
-		 */
-		injectCSS: z.boolean().optional().default(true),
-
-		/**
-		 * Options for the Markdown processor.
-		 */
-		markdown: z
-			.object({
-				/**
-				 * Configures the callouts theme.
-				 */
-				callouts: z
-					.object({
-						/**
-						 * The theme to use for callouts.
-						 */
-						theme: z
-							.union([z.literal('github'), z.literal('obsidian'), z.literal('vitepress')])
-							.optional()
-							.default('obsidian'),
-					})
-					.optional()
-					.default({}),
-
-				/**
-				 * Configures the user defined components for the Markdown processor.
-				 */
-				components: z.record(z.string(), z.string()).optional().default({}),
-			})
-			.optional()
-			.default({}),
-	})
-	.optional()
-	.default({});
-
-export type MarkdownRemarkOptions = typeof MarkdownRemarkOptionsSchema._input;
+export type { MarkdownRemarkOptions } from './schema.js';
 
 /**
  * Integrates the Markdown Remark processor into Astro available as `studiocms:markdown-remark`.
@@ -121,3 +82,5 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 		},
 	};
 }
+
+export default markdownRemark;
