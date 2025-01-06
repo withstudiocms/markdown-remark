@@ -88,31 +88,6 @@ export function prefixError(err: any, prefix: string): any {
 	return wrappedError;
 }
 
-export async function importComponents(components?: Record<string, string>) {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const PredefinedComponents: Record<string, any> = {};
-
-	for (const [name, path] of Object.entries(components ?? {})) {
-		try {
-			PredefinedComponents[name] = (await import(/* @vite-ignore */ path)).default;
-		} catch (e) {
-			if (e instanceof Error) {
-				const newErr = prefixError(e, `Failed to import component "${name}" from "${path}"`);
-				console.error(newErr);
-				throw new MarkdownRemarkError(newErr.message, newErr.stack);
-			}
-			const newErr = prefixError(
-				new Error('Unknown error'),
-				`Failed to import component "${name}" from "${path}"`
-			);
-			console.error(newErr);
-			throw new MarkdownRemarkError(newErr.message, newErr.stack);
-		}
-	}
-
-	return PredefinedComponents;
-}
-
 export async function importComponentsKeys(keys: string[]) {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const predefinedComponents: Record<string, any> = {};

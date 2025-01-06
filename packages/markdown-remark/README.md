@@ -29,6 +29,8 @@ pnpm add @studiocms/markdown-remark
 
 ### As an Astro Integration
 
+With the Astro integration enabled, you can either pass in custom components into your astro config, or manually for the specific render your trying to do shown in the following methods.
+
 #### Setup the integration
 
 **`astro.config.mjs`**
@@ -79,7 +81,7 @@ import Custom from '../components/Custom.astro';
         <title>Example</title>
     </head>
     <body>
-        <Markdown content={`# Hello World!`} components={{ custom: Custom }} />
+        <Markdown content={`# Hello World! <custom></custom>`} components={{ custom: Custom }} />
     </body>
 </html>
 ```
@@ -92,7 +94,7 @@ import { render } from 'studiocms:markdown-remark';
 import Custom from '../components/Custom.astro';
 
 // @ts-ignore
-const { html } = render('# Hello World!', {}, { $$result, {custom: Custom} })
+const { html } = render('# Hello World! <custom></custom>', {}, { $$result, {custom: Custom} })
 ---
 <html>
     <head>
