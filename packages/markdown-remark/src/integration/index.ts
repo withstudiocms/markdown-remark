@@ -84,8 +84,6 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 							import '${resolvedCalloutTheme}';
 						`,
 						'studiocms:markdown-remark/user-components': `
-							export const componentMap = ${JSON.stringify(resolvedComponents)};
-
 							export const componentKeys = ${JSON.stringify(componentNames)};
 
 							${componentExports.join('\n')}
@@ -111,7 +109,7 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 					}
 
 					declare module 'studiocms:markdown-remark/user-components' {
-						export const componentMap: Record<string, string>;
+						export const componentKeys: string[];
 					}
                     `,
 				});

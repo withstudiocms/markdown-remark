@@ -4,7 +4,5 @@ declare module 'studiocms:markdown-remark' {
 }
 
 declare module 'studiocms:markdown-remark/user-components' {
-	export const componentMap: Record<string, string>;
-
 	export const componentKeys: string[];
 }
