@@ -19,6 +19,7 @@ import { remarkCollectImages } from './remark-collect-images.js';
 import type {
 	MarkdownProcessor,
 	MarkdownProcessorRenderResult,
+	StudioCMSCalloutOptions,
 	StudioCMSMarkdownOptions,
 } from './types.js';
 
@@ -110,6 +111,21 @@ export async function createMarkdownProcessor(
 		studiocms = markdownConfigDefaults.studiocms,
 	} = opts ?? {};
 
+	let autolink = true;
+	let calloutsEnabled = true;
+	let calloutsConfig: StudioCMSCalloutOptions = { theme: 'obsidian' };
+
+	if (typeof studiocms === 'boolean') {
+		autolink = studiocms;
+		calloutsEnabled = studiocms;
+	} else if (typeof studiocms === 'object') {
+		autolink = studiocms.autolink ?? autolink;
+		calloutsEnabled = studiocms.callouts !== false;
+		if (typeof studiocms.callouts === 'object') {
+			calloutsConfig = studiocms.callouts;
+		}
+	}
+
 	const loadedRemarkPlugins = await Promise.all(loadPlugins(remarkPlugins));
 	const loadedRehypePlugins = await Promise.all(loadPlugins(rehypePlugins));
 
@@ -158,23 +174,6 @@ export async function createMarkdownProcessor(
 
 	// Headings
 	parser.use(rehypeHeadingIds);
-
-	let autolink = true;
-	let calloutsEnabled = true;
-	let calloutsConfig: {
-		theme?: 'github' | 'obsidian' | 'vitepress';
-	} = { theme: 'obsidian' };
-
-	if (typeof studiocms === 'boolean') {
-		autolink = studiocms;
-		calloutsEnabled = studiocms;
-	} else if (typeof studiocms === 'object') {
-		autolink = studiocms.autolink ?? autolink;
-		calloutsEnabled = studiocms.callouts !== false;
-		if (typeof studiocms.callouts === 'object') {
-			calloutsConfig = studiocms.callouts;
-		}
-	}
 
 	// Autolink headings
 	if (autolink) {

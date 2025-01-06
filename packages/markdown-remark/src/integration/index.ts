@@ -1,28 +1,31 @@
 import type { AstroIntegration } from 'astro';
 import { addVirtualImports, createResolver } from 'astro-integration-kit';
-import { type MarkdownRemarkOptions, MarkdownRemarkOptionsSchema } from './schema.js';
+import {
+	type StudioCMSMarkdownRemarkOptions,
+	StudioCMSMarkdownRemarkOptionsSchema,
+} from './schema.js';
 import { shared } from './shared.js';
 
-export type { MarkdownRemarkOptions } from './schema.js';
+export type { StudioCMSMarkdownRemarkOptions } from './schema.js';
 
 /**
  * Integrates the Markdown Remark processor into Astro available as `studiocms:markdown-remark`.
  *
- * @param {MarkdownRemarkOptions} opts Options for the Markdown Remark processor.
+ * @param {StudioCMSMarkdownRemarkOptions} opts Options for the Markdown Remark processor.
  * @returns Astro integration.
  */
-export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
+export function markdownRemark(opts?: StudioCMSMarkdownRemarkOptions): AstroIntegration {
 	// Parse the options
-	const {
-		injectCSS,
-		markdown: { callouts, components, autolink },
-	} = MarkdownRemarkOptionsSchema.parse(opts);
+	const { injectCSS, components, markdownExtended } =
+		StudioCMSMarkdownRemarkOptionsSchema.parse(opts);
 
 	// Create a resolver for the current file
 	const { resolve } = createResolver(import.meta.url);
 
 	// Resolve the callout theme based on the user's configuration
-	const resolvedCalloutTheme = resolve(`../../assets/callout-themes/${callouts.theme}.css`);
+	const resolvedCalloutTheme = resolve(
+		`../../assets/callout-themes/${markdownExtended.callouts.theme}.css`
+	);
 
 	return {
 		name: '@studiocms/markdown-remark',
@@ -40,7 +43,7 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 						// Styles for the Markdown Remark processor
 						'studiocms:markdown-remark/css': `
 							import '${resolve('../../assets/headings.css')}';
-							import '${resolvedCalloutTheme}';
+							${markdownExtended.callouts.enabled ? `import '${resolvedCalloutTheme}';` : ''}
 						`,
 						// User defined components for the Markdown processor
 						'studiocms:markdown-remark/user-components': `
@@ -67,7 +70,7 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 
 				// Inject the Markdown configuration into the shared state
 				shared.markdownConfig = config.markdown;
-				shared.studiocms = { callouts, autolink };
+				shared.studiocms = markdownExtended;
 
 				// Inject types for the Markdown Remark processor
 				injectTypes({

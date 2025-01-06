@@ -4,7 +4,7 @@ import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
 import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
 import type { HTMLString } from '../processor/HTMLString.js';
 import type { MarkdownHeading } from '../processor/index.js';
-import type { CalloutConfig } from './schema.js';
+import type { StudioCMSMarkdownExtendedConfig } from './schema.js';
 
 /**
  * Represents the response from rendering a markdown document.
@@ -71,8 +71,5 @@ export interface ComponentSlots {
  */
 export interface Shared {
 	markdownConfig: AstroConfig['markdown'];
-	studiocms: {
-		callouts: CalloutConfig;
-		autolink: boolean;
-	};
+	studiocms: StudioCMSMarkdownExtendedConfig;
 }

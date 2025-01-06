@@ -7,6 +7,7 @@ import {
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
 } from '../processor/index.js';
+import { TransformToProcessor } from './schema.js';
 import { shared } from './shared.js';
 import type {
 	ComponentSlots,
@@ -24,9 +25,11 @@ import {
 
 export type { Props, RenderResponse } from './types.js';
 
+const studiocmsMarkdownExtended = TransformToProcessor.parse(shared.studiocms);
+
 const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
-	studiocms: shared.studiocms,
+	...studiocmsMarkdownExtended,
 });
 
 const predefinedComponents = await importComponentsKeys(componentKeys);
@@ -51,7 +54,11 @@ export async function render(
 
 	const { code, metadata } = await processor.render(content, options);
 
-	const html = await transformHTML(code, componentsRendered, sanitizeOpts);
+	const html = await transformHTML(
+		code,
+		componentsRendered,
+		sanitizeOpts ?? shared.studiocms.sanitize
+	);
 
 	return {
 		html: new HTMLString(html),

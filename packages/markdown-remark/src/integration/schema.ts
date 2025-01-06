@@ -1,64 +1,93 @@
 import { z } from 'astro/zod';
+import type { StudioCMSConfigOptions } from '../processor/types.js';
 
-/**
- * Options for the Markdown Callouts.
- */
-const CalloutsSchema = z
+export const StudioCMSSanitizeOptionsSchema = z
 	.object({
-		/**
-		 * The theme to use for callouts.
-		 */
-		theme: z
-			.union([z.literal('github'), z.literal('obsidian'), z.literal('vitepress')])
-			.optional()
-			.default('obsidian'),
+		/** An Array of strings indicating elements that the sanitizer should not remove. All elements not in the array will be dropped. */
+		allowElements: z.array(z.string()).optional(),
+		/** An Array of strings indicating elements that the sanitizer should remove, but keeping their child elements. */
+		blockElements: z.array(z.string()).optional(),
+		/** An Array of strings indicating elements (including nested elements) that the sanitizer should remove. */
+		dropElements: z.array(z.string()).optional(),
+		/** An Object where each key is the attribute name and the value is an Array of allowed tag names. Matching attributes will not be removed. All attributes that are not in the array will be dropped. */
+		allowAttributes: z.record(z.array(z.string())).optional(),
+		/** An Object where each key is the attribute name and the value is an Array of dropped tag names. Matching attributes will be removed. */
+		dropAttributes: z.record(z.array(z.string())).optional(),
+		/** A Boolean value set to false (default) to remove components and their children. If set to true, components will be subject to built-in and custom configuration checks (and will be retained or dropped based on those checks). */
+		allowComponents: z.boolean().optional(),
+		/** A Boolean value set to false (default) to remove custom elements and their children. If set to true, custom elements will be subject to built-in and custom configuration checks (and will be retained or dropped based on those checks). */
+		allowCustomElements: z.boolean().optional(),
+		/** A Boolean value set to false (default) to remove HTML comments. Set to true in order to keep comments. */
+		allowComments: z.boolean().optional(),
 	})
-	.optional()
-	.default({});
+	.optional();
 
-/**
- * Extended options for the Astro Integration for Markdown Remark. Used to control how Markdown is processed.
- */
-const MarkdownSchema = z
+export const StudioCMSMarkdownExtendedSchema = z
+	.union([
+		z.literal(false),
+		z.object({
+			callouts: z
+				.union([
+					z.literal(false),
+					z.object({
+						theme: z
+							.union([z.literal('github'), z.literal('obsidian'), z.literal('vitepress')])
+							.optional()
+							.default('obsidian'),
+					}),
+				])
+				.optional()
+				.default({})
+				.transform((value) => {
+					if (value === false) {
+						return { theme: 'obsidian' as const, enabled: false };
+					}
+					return { ...value, enabled: true };
+				}),
+
+			autoLinkHeadings: z.boolean().optional().default(true),
+
+			sanitize: StudioCMSSanitizeOptionsSchema,
+		}),
+	])
+	.optional()
+	.default({})
+	.transform((value) => {
+		if (value === false) {
+			return {
+				callouts: { enabled: false, theme: 'obsidian' as const },
+				autoLinkHeadings: false,
+			};
+		}
+		return value;
+	});
+
+export const StudioCMSMarkdownRemarkOptionsSchema = z
 	.object({
 		/**
-		 * Configures the callouts theme.
-		 */
-		callouts: CalloutsSchema,
-
-		/**
-		 * Enables autolinking of headings.
-		 */
-		autolink: z.boolean().optional().default(true),
-
-		/**
-		 * Configures the user defined components for the Markdown processor.
-		 */
-		components: z.record(z.string(), z.string()).optional().default({}),
-	})
-	.optional()
-	.default({});
-
-/**
- * Options for the Markdown Remark processor.
- */
-export const MarkdownRemarkOptionsSchema = z
-	.object({
-		/**
-		 * Inject CSS for the Markdown processor.
+		 * Inject CSS for Rendering Markdown content.
 		 */
 		injectCSS: z.boolean().optional().default(true),
 
-		/**
-		 * Extended options for the Astro Integration for Markdown Remark. Used to control how Markdown is processed.
-		 */
-		markdown: MarkdownSchema,
+		components: z.record(z.string(), z.string()).optional().default({}),
+
+		markdownExtended: StudioCMSMarkdownExtendedSchema,
 	})
 	.optional()
 	.default({});
 
-/**
- * Options for the Markdown Remark processor.
- */
-export type MarkdownRemarkOptions = typeof MarkdownRemarkOptionsSchema._input;
-export type CalloutConfig = typeof CalloutsSchema._output;
+export const TransformToProcessor = StudioCMSMarkdownExtendedSchema.transform(
+	({ autoLinkHeadings, callouts }) => {
+		return {
+			studiocms: {
+				callouts: callouts.enabled ? { theme: callouts.theme } : false,
+				autolink: autoLinkHeadings,
+			},
+		} as { studiocms: StudioCMSConfigOptions };
+	}
+);
+
+export type StudioCMSMarkdownExtendedOptions = typeof StudioCMSMarkdownExtendedSchema._input;
+export type StudioCMSMarkdownExtendedConfig = z.infer<typeof StudioCMSMarkdownExtendedSchema>;
+export type StudioCMSMarkdownRemarkOptions = typeof StudioCMSMarkdownRemarkOptionsSchema._input;
+export type StudioCMSMarkdownRemarkConfig = z.infer<typeof StudioCMSMarkdownRemarkOptionsSchema>;

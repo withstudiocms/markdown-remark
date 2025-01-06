@@ -55,17 +55,17 @@ export interface AstroMarkdownOptions {
 	smartypants?: boolean;
 }
 
+export interface StudioCMSCalloutOptions {
+	theme?: 'github' | 'obsidian' | 'vitepress';
+}
+
+export interface StudioCMSConfigOptions {
+	callouts?: StudioCMSCalloutOptions | false;
+	autolink?: boolean;
+}
+
 export interface StudioCMSMarkdownOptions extends AstroMarkdownOptions {
-	studiocms?:
-		| {
-				callouts?:
-					| {
-							theme?: 'github' | 'obsidian' | 'vitepress';
-					  }
-					| false;
-				autolink?: boolean;
-		  }
-		| false;
+	studiocms?: StudioCMSConfigOptions | false;
 }
 
 export interface MarkdownProcessor {
