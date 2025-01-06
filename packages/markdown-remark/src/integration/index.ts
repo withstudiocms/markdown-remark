@@ -70,11 +70,6 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 					resolvedComponents[name] = astroRootResolve(path);
 				}
 
-				const componentNames = Object.keys(resolvedComponents);
-				const componentExports = Object.entries(resolvedComponents).map((component) => {
-					return `export { default as ${component[0]} } from '${component[1]}';`;
-				});
-
 				addVirtualImports(params, {
 					name: '@studiocms/markdown-remark',
 					imports: {
@@ -84,9 +79,11 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 							import '${resolvedCalloutTheme}';
 						`,
 						'studiocms:markdown-remark/user-components': `
-							export const componentKeys = ${JSON.stringify(componentNames)};
+							export const componentKeys = ${JSON.stringify(Object.keys(resolvedComponents))};
 
-							${componentExports.join('\n')}
+							${Object.entries(resolvedComponents)
+								.map(([name, path]) => `export { default as ${name} } from '${path}';`)
+								.join('\n')}
 						`,
 					},
 				});
