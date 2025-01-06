@@ -51,12 +51,13 @@ export type MarkdownRemarkOptions = typeof MarkdownRemarkOptionsSchema._input;
  * @returns Astro integration.
  */
 export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
-	const { injectCSS, markdown } = MarkdownRemarkOptionsSchema.parse(opts);
+	const {
+		injectCSS,
+		markdown: { callouts, components },
+	} = MarkdownRemarkOptionsSchema.parse(opts);
 	const { resolve } = createResolver(import.meta.url);
 
-	const resolvedCalloutTheme = resolve(
-		`../../assets/callout-themes/${markdown.callouts.theme}.css`
-	);
+	const resolvedCalloutTheme = resolve(`../../assets/callout-themes/${callouts.theme}.css`);
 
 	return {
 		name: '@studiocms/markdown-remark',
@@ -73,9 +74,9 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 							import '${resolvedCalloutTheme}';
 						`,
 						'studiocms:markdown-remark/user-components': `
-							export const componentKeys = ${JSON.stringify(Object.keys(markdown.components))};
+							export const componentKeys = ${JSON.stringify(Object.keys(components))};
 
-							${Object.entries(markdown.components)
+							${Object.entries(components)
 								.map(
 									([name, path]) =>
 										`export { default as ${name} } from '${astroRootResolve(path)}';`
@@ -90,6 +91,8 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 				}
 			},
 			'astro:config:done'({ injectTypes, config }) {
+				const { resolve: astroRootResolve } = createResolver(config.root.pathname);
+
 				shared.markdownConfig = config.markdown;
 				injectTypes({
 					filename: 'render.d.ts',
@@ -104,6 +107,13 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 
 					declare module 'studiocms:markdown-remark/user-components' {
 						export const componentKeys: string[];
+
+						${Object.entries(components)
+							.map(
+								([name, path]) =>
+									`export const ${name}: typeof import('${astroRootResolve(path)}').default;`
+							)
+							.join('\n')}
 					}
                     `,
 				});
