@@ -6,7 +6,7 @@ import { shared } from './shared.js';
 const MarkdownRemarkOptionsSchema = z
 	.object({
 		/**
-		 * Inject CSS for Rehype autolink headings styles.
+		 * Inject CSS for the Markdown processor.
 		 */
 		injectCSS: z.boolean().optional().default(true),
 
@@ -30,6 +30,11 @@ const MarkdownRemarkOptionsSchema = z
 					})
 					.optional()
 					.default({}),
+
+				/**
+				 * Configures the user defined components for the Markdown processor.
+				 */
+				components: z.record(z.string(), z.string()).optional().default({}),
 			})
 			.optional()
 			.default({}),
@@ -57,6 +62,19 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 		name: '@studiocms/markdown-remark',
 		hooks: {
 			'astro:config:setup'(params) {
+				const { resolve: astroRootResolve } = createResolver(params.config.root.pathname);
+
+				const resolvedComponents: Record<string, string> = {};
+
+				for (const [name, path] of Object.entries(markdown.components)) {
+					resolvedComponents[name] = astroRootResolve(path);
+				}
+
+				const componentNames = Object.keys(resolvedComponents);
+				const componentExports = Object.entries(resolvedComponents).map((component) => {
+					return `export { default as ${component[0]} } from '${component[1]}';`;
+				});
+
 				addVirtualImports(params, {
 					name: '@studiocms/markdown-remark',
 					imports: {
@@ -64,6 +82,13 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 						'studiocms:markdown-remark/css': `
 							import '${resolve('../../assets/headings.css')}';
 							import '${resolvedCalloutTheme}';
+						`,
+						'studiocms:markdown-remark/user-components': `
+							export const componentMap = ${JSON.stringify(resolvedComponents)};
+
+							export const componentKeys = ${JSON.stringify(componentNames)};
+
+							${componentExports.join('\n')}
 						`,
 					},
 				});
@@ -83,6 +108,10 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 						export const Markdown: typeof import('${resolve('./markdown.js')}').Markdown;
 						export type Props = import('${resolve('./markdown.js')}').Props;
 						export type RenderResponse = import('${resolve('./markdown.js')}').RenderResponse;
+					}
+
+					declare module 'studiocms:markdown-remark/user-components' {
+						export const componentMap: Record<string, string>;
 					}
                     `,
 				});

@@ -1,14 +1,18 @@
+import { componentKeys } from 'studiocms:markdown-remark/user-components';
 import type { SSRResult } from 'astro';
 import { renderSlot } from 'astro/runtime/server/index.js';
 import type { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
 import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
-import type { HTMLString } from '../processor/HTMLString.js';
+import { transform } from 'ultrahtml';
+import swap from 'ultrahtml/transformers/swap';
+import { HTMLString } from '../processor/HTMLString.js';
 import {
 	type MarkdownHeading,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
 } from '../processor/index.js';
 import { shared } from './shared.js';
+import { createComponentProxy, dedent, importComponentsKeys, mergeRecords } from './utils.js';
 
 const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
@@ -16,6 +20,8 @@ const processor = await createMarkdownProcessor({
 		theme: 'obsidian',
 	},
 });
+
+const predefinedComponents = await importComponentsKeys(componentKeys);
 
 /**
  * Represents the response from rendering a markdown document.
@@ -53,19 +59,6 @@ export interface RenderResponse {
 }
 
 /**
- * Interface representing the properties for a markdown component.
- *
- * @property content - The markdown content as a string.
- * @property [name: string] - An index signature allowing additional properties with string keys and values of any type.
- */
-export interface Props {
-	content: string;
-
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	[name: string]: any;
-}
-
-/**
  * Renders the given markdown content using the specified options.
  *
  * @param content - The markdown content to be rendered.
@@ -74,14 +67,39 @@ export interface Props {
  */
 export async function render(
 	content: string,
-	options?: MarkdownProcessorRenderOptions
+	options?: MarkdownProcessorRenderOptions,
+	_components?: {
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		$$result: any;
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		components?: Record<string, any>;
+	}
 ): Promise<RenderResponse> {
+	const allComponents = mergeRecords(predefinedComponents, _components?.components ?? {});
+
+	const componentsRendered = createComponentProxy(_components?.$$result, allComponents);
+
 	const result = await processor.render(content, options);
 
+	const html = await transform(dedent(result.astroHTML.toString()), [swap(componentsRendered)]);
 	return {
-		html: result.astroHTML,
+		html: new HTMLString(html),
 		meta: result.metadata,
 	};
+}
+
+/**
+ * Interface representing the properties for a markdown component.
+ *
+ * @property content - The markdown content as a string.
+ * @property [name: string] - An index signature allowing additional properties with string keys and values of any type.
+ */
+export interface Props {
+	content: string;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	components?: Record<string, any>;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	[name: string]: any;
 }
 
 /**
@@ -113,8 +131,9 @@ export async function render(
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const Markdown: (props: Props) => any = Object.assign(
 	function Markdown(
-		result: SSRResult,
-		attributes: { content: string },
+		$$result: SSRResult,
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		attributes: { content: string; components?: Record<string, any> },
 		slots: { default: ComponentSlotValue | RenderTemplateResult }
 	) {
 		return {
@@ -125,13 +144,17 @@ export const Markdown: (props: Props) => any = Object.assign(
 				const mdl = attributes.content;
 
 				if (typeof mdl === 'string') {
-					yield (
-						await render(mdl, {
+					const content = await render(
+						mdl,
+						{
 							fileURL: new URL(import.meta.url),
-						})
-					).html;
+						},
+						{ $$result, components: attributes.components }
+					);
+
+					yield content.html;
 				} else {
-					yield renderSlot(result, slots.default);
+					yield renderSlot($$result, slots.default);
 				}
 			},
 		};

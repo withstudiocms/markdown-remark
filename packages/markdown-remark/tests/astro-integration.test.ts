@@ -10,9 +10,9 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 		await fixture.build({});
 	});
 
-	afterAll(async () => {
-		await fixture.clean();
-	});
+	// afterAll(async () => {
+	// 	await fixture.clean();
+	// });
 
 	test('Basic Component Tests', async () => {
 		const content = await fixture.readFile('basic/index.html');
@@ -39,6 +39,14 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 			content
 		).toContain(`<div dir="auto" class="callout" style="--callout-color-light: rgb(8, 109, 221); --callout-color-dark: rgb(2, 122, 255);"><div class="callout-title"><div class="callout-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5 19 9l-4-4L3.5 16.5 2 22z"></path></svg></div><div class="callout-title-inner">This is a <em>non-collapsible</em> callout</div></div><div class="callout-content"><p>Some content is displayed directly!</p></div></div>
 <details dir="auto" class="callout callout-collapsible" style="--callout-color-light: rgb(236, 117, 0); --callout-color-dark: rgb(233, 151, 63);"><summary class="callout-title"><div class="callout-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><div class="callout-title-inner">This is a <strong>collapsible</strong> callout</div><div class="callout-fold" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></div></summary><div class="callout-content"><p>Some content shown after opening!</p></div></details>`);
+	});
+
+	test('Custom Components test', async () => {
+		const content = await fixture.readFile('custom-components/index.html');
+
+		expect(content).toContain(
+			'<div> <h1>Custom Component</h1> <p>This is a custom component</p> </div>'
+		);
 	});
 
 	test('Direct Markdown Processor Tests', async () => {
