@@ -10,9 +10,9 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 		await fixture.build({});
 	});
 
-	// afterAll(async () => {
-	// 	await fixture.clean();
-	// });
+	afterAll(async () => {
+		await fixture.clean();
+	});
 
 	test('Basic Component Tests', async () => {
 		const content = await fixture.readFile('basic/index.html');
