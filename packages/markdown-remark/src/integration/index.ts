@@ -44,12 +44,12 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 						`,
 						// User defined components for the Markdown processor
 						'studiocms:markdown-remark/user-components': `
-							export const componentKeys = ${JSON.stringify(Object.keys(components))};
+							export const componentKeys = ${JSON.stringify(Object.keys(components).map((name) => name.toLowerCase()))};
 
 							${Object.entries(components)
 								.map(
 									([name, path]) =>
-										`export { default as ${name} } from '${astroRootResolve(path)}';`
+										`export { default as ${name.toLowerCase()} } from '${astroRootResolve(path)}';`
 								)
 								.join('\n')}
 						`,
@@ -87,7 +87,7 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 						${Object.entries(components)
 							.map(
 								([name, path]) =>
-									`export const ${name}: typeof import('${astroRootResolve(path)}').default;`
+									`export const ${name.toLowerCase()}: typeof import('${astroRootResolve(path)}').default;`
 							)
 							.join('\n')}
 					}

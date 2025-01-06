@@ -26,15 +26,15 @@ export function createComponentProxy(
 	const components: Record<string, any> = {};
 	for (const [key, value] of Object.entries(_components)) {
 		if (typeof value === 'string') {
-			components[key] = value;
+			components[key.toLowerCase()] = value;
 		} else {
-			components[key] = async (
+			components[key.toLowerCase()] = async (
 				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 				props: Record<string, any>,
 				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 				children: { value: any }
 			) => {
-				if (key === 'CodeBlock' || key === 'CodeSpan') {
+				if (key === 'codeblock' || key === 'codespan') {
 					props.code = entities.decode(JSON.parse(`"${props.code}"`));
 				}
 				const output = await renderJSX(result, h(value, { ...props, 'set:html': children.value }));
@@ -84,7 +84,7 @@ export function mergeRecords(...records: Record<string, any>[]): Record<string, 
 	const result: Record<string, any> = {};
 	for (const record of records) {
 		for (const [key, value] of Object.entries(record)) {
-			result[key] = value;
+			result[key.toLowerCase()] = value;
 		}
 	}
 	return result;
@@ -131,7 +131,9 @@ export async function importComponentsKeys(keys: string[]) {
 
 	for (const key of keys) {
 		try {
-			predefinedComponents[key] = (await import('studiocms:markdown-remark/user-components'))[key];
+			predefinedComponents[key.toLowerCase()] = (
+				await import('studiocms:markdown-remark/user-components')
+			)[key.toLowerCase()];
 		} catch (e) {
 			if (e instanceof Error) {
 				const newErr = prefixError(e, `Failed to import component "${key}"`);
