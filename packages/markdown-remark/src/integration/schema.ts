@@ -52,4 +52,7 @@ export const MarkdownRemarkOptionsSchema = z
 	.optional()
 	.default({});
 
+/**
+ * Options for the Markdown Remark processor.
+ */
 export type MarkdownRemarkOptions = typeof MarkdownRemarkOptionsSchema._input;

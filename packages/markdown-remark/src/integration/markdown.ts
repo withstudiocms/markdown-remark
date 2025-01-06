@@ -3,6 +3,7 @@ import type { SSRResult } from 'astro';
 import { renderSlot } from 'astro/runtime/server/index.js';
 import type { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
 import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
+import type { HTMLAttributes } from 'astro/types';
 import { transform } from 'ultrahtml';
 import swap from 'ultrahtml/transformers/swap';
 import { HTMLString } from '../processor/HTMLString.js';
@@ -92,6 +93,7 @@ export async function render(
  * Interface representing the properties for a markdown component.
  *
  * @property content - The markdown content as a string.
+ * @property [components] - An object containing the components to be used in the markdown content.
  * @property [name: string] - An index signature allowing additional properties with string keys and values of any type.
  */
 export interface Props {

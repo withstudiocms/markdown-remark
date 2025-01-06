@@ -4,6 +4,16 @@ import { renderJSX } from 'astro/runtime/server/jsx.js';
 import * as entities from 'entities';
 import { __unsafeHTML } from 'ultrahtml';
 
+/**
+ * Creates a proxy for components that can either be strings or functions.
+ * If the component is a string, it is directly assigned to the proxy.
+ * If the component is a function, it is wrapped in an async function that
+ * processes the props and children before rendering.
+ *
+ * @param result - The result object used for rendering JSX.
+ * @param _components - An optional record of components to be proxied. Defaults to an empty object.
+ * @returns A record of proxied components.
+ */
 export function createComponentProxy(
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	result: any,
@@ -33,11 +43,23 @@ export function createComponentProxy(
 	return components;
 }
 
+/**
+ * Determines the indentation of a given line of text.
+ *
+ * @param ln - The line of text to analyze.
+ * @returns The leading whitespace characters of the line, or an empty string if there is no indentation.
+ */
 function getIndent(ln: string): string {
 	if (ln.trimStart() === ln) return '';
 	return ln.slice(0, ln.length - ln.trimStart().length);
 }
 
+/**
+ * Removes leading indentation from a multi-line string.
+ *
+ * @param str - The string from which to remove leading indentation.
+ * @returns The dedented string.
+ */
 export function dedent(str: string): string {
 	const lns = str.replace(/^[\r\n]+/, '').split('\n');
 	let indent = getIndent(lns[0]);
@@ -48,6 +70,12 @@ export function dedent(str: string): string {
 	return lns.map((ln) => (ln.startsWith(indent) ? ln.slice(indent.length) : ln)).join('\n');
 }
 
+/**
+ * Merges multiple records into a single record. If there are duplicate keys, the value from the last record with that key will be used.
+ *
+ * @param {...Record<string, any>[]} records - The records to merge.
+ * @returns {Record<string, any>} - The merged record.
+ */
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function mergeRecords(...records: Record<string, any>[]): Record<string, any> {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -88,6 +116,13 @@ export function prefixError(err: any, prefix: string): any {
 	return wrappedError;
 }
 
+/**
+ * Imports components by their keys from the 'studiocms:markdown-remark/user-components' module.
+ *
+ * @param keys - An array of strings representing the keys of the components to import.
+ * @returns A promise that resolves to an object containing the imported components.
+ * @throws {MarkdownRemarkError} If any component fails to import, an error is thrown with a prefixed message.
+ */
 export async function importComponentsKeys(keys: string[]) {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const predefinedComponents: Record<string, any> = {};
