@@ -49,17 +49,19 @@ export default defineConfig({
     integrations: [markdownRemark({
         // Used for injecting CSS for Headings and Callouts
         injectCSS: true,
+        // User defined components that will be used when processing markdown
+        components: {
+            // Example of a custom defined component
+            custom: "./src/components/Custom.astro",
+        },
         // Custom Markdown config
         markdown: {
             // Configure the available callout themes
             callouts: {
                 theme: 'obsidian' // Can also be 'github' or 'vitepress'
             },
-            // User defined components that will be used when processing markdown
-            components: {
-                // Example of a custom defined component
-                custom: "./src/components/Custom.astro",
-            }
+            autoLinkHeadings: true,
+            sanitize: {} // see https://github.com/natemoo-re/ultrahtml?tab=readme-ov-file#sanitization for full options
         }
     })],
 });
