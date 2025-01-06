@@ -2,7 +2,9 @@ import { AstroError } from 'astro/errors';
 import { jsx as h } from 'astro/jsx-runtime';
 import { renderJSX } from 'astro/runtime/server/jsx.js';
 import * as entities from 'entities';
-import { __unsafeHTML } from 'ultrahtml';
+import { __unsafeHTML, transform } from 'ultrahtml';
+import sanitize, { type SanitizeOptions } from 'ultrahtml/transformers/sanitize';
+import swap from 'ultrahtml/transformers/swap';
 
 /**
  * Creates a proxy for components that can either be strings or functions.
@@ -143,4 +145,13 @@ export async function importComponentsKeys(keys: string[]) {
 	}
 
 	return predefinedComponents;
+}
+
+export async function transformHTML(
+	html: string,
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	components: Record<string, any>,
+	sanitizeOpts?: SanitizeOptions
+): Promise<string> {
+	return await transform(dedent(html), [sanitize(sanitizeOpts), swap(components)]);
 }

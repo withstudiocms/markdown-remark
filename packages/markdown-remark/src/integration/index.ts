@@ -67,6 +67,7 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 
 				// Inject the Markdown configuration into the shared state
 				shared.markdownConfig = config.markdown;
+				shared.callouts = callouts;
 
 				// Inject types for the Markdown Remark processor
 				injectTypes({

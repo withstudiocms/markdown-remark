@@ -1,63 +1,35 @@
 import { componentKeys } from 'studiocms:markdown-remark/user-components';
 import type { SSRResult } from 'astro';
 import { renderSlot } from 'astro/runtime/server/index.js';
-import type { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
-import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
-import type { HTMLAttributes } from 'astro/types';
-import { transform } from 'ultrahtml';
-import swap from 'ultrahtml/transformers/swap';
+import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
 import { HTMLString } from '../processor/HTMLString.js';
 import {
-	type MarkdownHeading,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
 } from '../processor/index.js';
 import { shared } from './shared.js';
-import { createComponentProxy, dedent, importComponentsKeys, mergeRecords } from './utils.js';
+import type {
+	ComponentSlots,
+	MarkdownComponentAttributes,
+	Props,
+	RenderComponents,
+	RenderResponse,
+} from './types.js';
+import {
+	createComponentProxy,
+	importComponentsKeys,
+	mergeRecords,
+	transformHTML,
+} from './utils.js';
+
+export type { Props, RenderResponse } from './types.js';
 
 const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
-	callouts: {
-		theme: 'obsidian',
-	},
+	...shared.callouts,
 });
 
 const predefinedComponents = await importComponentsKeys(componentKeys);
-
-/**
- * Represents the response from rendering a markdown document.
- */
-export interface RenderResponse {
-	/**
-	 * The rendered HTML content as a string.
-	 */
-	html: HTMLString;
-
-	/**
-	 * Metadata extracted from the markdown document.
-	 */
-	meta: {
-		/**
-		 * An array of headings found in the markdown document.
-		 */
-		headings: MarkdownHeading[];
-
-		/**
-		 * An array of image paths found in the markdown document.
-		 */
-		imagePaths: string[];
-
-		/**
-		 * The frontmatter data extracted from the markdown document.
-		 *
-		 * @remarks
-		 * The frontmatter is represented as a record with string keys and values of any type.
-		 */
-
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		frontmatter: Record<string, any>;
-	};
-}
 
 /**
  * Renders the given markdown content using the specified options.
@@ -69,39 +41,22 @@ export interface RenderResponse {
 export async function render(
 	content: string,
 	options?: MarkdownProcessorRenderOptions,
-	_components?: {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		$$result: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		components?: Record<string, any>;
-	}
+	componentProxy?: RenderComponents,
+	sanitizeOpts?: SanitizeOptions
 ): Promise<RenderResponse> {
-	const allComponents = mergeRecords(predefinedComponents, _components?.components ?? {});
+	const componentsRendered = createComponentProxy(
+		componentProxy?.$$result,
+		mergeRecords(predefinedComponents, componentProxy?.components ?? {})
+	);
 
-	const componentsRendered = createComponentProxy(_components?.$$result, allComponents);
+	const { code, metadata } = await processor.render(content, options);
 
-	const result = await processor.render(content, options);
+	const html = await transformHTML(code, componentsRendered, sanitizeOpts);
 
-	const html = await transform(dedent(result.astroHTML.toString()), [swap(componentsRendered)]);
 	return {
 		html: new HTMLString(html),
-		meta: result.metadata,
+		meta: metadata,
 	};
-}
-
-/**
- * Interface representing the properties for a markdown component.
- *
- * @property content - The markdown content as a string.
- * @property [components] - An object containing the components to be used in the markdown content.
- * @property [name: string] - An index signature allowing additional properties with string keys and values of any type.
- */
-export interface Props {
-	content: string;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	components?: Record<string, any>;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	[name: string]: any;
 }
 
 /**
@@ -134,29 +89,26 @@ export interface Props {
 export const Markdown: (props: Props) => any = Object.assign(
 	function Markdown(
 		$$result: SSRResult,
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		attributes: { content: string; components?: Record<string, any> },
-		slots: { default: ComponentSlotValue | RenderTemplateResult }
+		{ content, components, sanitizeOpts }: MarkdownComponentAttributes,
+		{ default: slotted }: ComponentSlots
 	) {
 		return {
 			get [Symbol.toStringTag]() {
 				return 'AstroComponent';
 			},
 			async *[Symbol.asyncIterator]() {
-				const mdl = attributes.content;
-
-				if (typeof mdl === 'string') {
-					const content = await render(
-						mdl,
+				if (typeof content === 'string') {
+					const { html } = await render(
+						content,
 						{
 							fileURL: new URL(import.meta.url),
 						},
-						{ $$result, components: attributes.components }
+						{ $$result, components },
+						sanitizeOpts
 					);
-
-					yield content.html;
+					yield html;
 				} else {
-					yield renderSlot($$result, slots.default);
+					yield renderSlot($$result, slotted);
 				}
 			},
 		};

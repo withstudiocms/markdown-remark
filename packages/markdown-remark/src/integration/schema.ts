@@ -56,3 +56,4 @@ export const MarkdownRemarkOptionsSchema = z
  * Options for the Markdown Remark processor.
  */
 export type MarkdownRemarkOptions = typeof MarkdownRemarkOptionsSchema._input;
+export type CalloutConfig = typeof CalloutsSchema._output;
