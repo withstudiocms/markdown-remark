@@ -53,6 +53,9 @@ importers:
       astro-integration-kit:
         specifier: ^0.18.0
         version: 0.18.0(astro@5.1.2(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0))
+      entities:
+        specifier: ^6.0.0
+        version: 6.0.0
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0
@@ -107,6 +110,9 @@ importers:
       shiki:
         specifier: ^1.23.1
         version: 1.25.1
+      ultrahtml:
+        specifier: ^1.5.3
+        version: 1.5.3
       unified:
         specifier: ^11.0.5
         version: 11.0.5
@@ -1425,6 +1431,10 @@ packages:
 
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
+    engines: {node: '>=0.12'}
+
+  entities@6.0.0:
+    resolution: {integrity: sha512-aKstq2TDOndCn4diEyp9Uq/Flu2i1GlLkc6XIDQSDMuaFE3OPW5OphLCyQ5SpSJZTb4reN+kTcYru5yIfXoRPw==}
     engines: {node: '>=0.12'}
 
   es-module-lexer@1.6.0:
@@ -4163,6 +4173,8 @@ snapshots:
       strip-ansi: 6.0.1
 
   entities@4.5.0: {}
+
+  entities@6.0.0: {}
 
   es-module-lexer@1.6.0: {}
 

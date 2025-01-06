@@ -19,6 +19,7 @@ import { remarkCollectImages } from './remark-collect-images.js';
 import type {
 	MarkdownProcessor,
 	MarkdownProcessorRenderResult,
+	StudioCMSCalloutOptions,
 	StudioCMSMarkdownOptions,
 } from './types.js';
 
@@ -65,8 +66,11 @@ export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {
 	remarkRehype: {},
 	gfm: true,
 	smartypants: true,
-	callouts: {
-		theme: 'obsidian',
+	studiocms: {
+		callouts: {
+			theme: 'obsidian',
+		},
+		autolink: true,
 	},
 };
 
@@ -104,8 +108,23 @@ export async function createMarkdownProcessor(
 		remarkRehype: remarkRehypeOptions = markdownConfigDefaults.remarkRehype,
 		gfm = markdownConfigDefaults.gfm,
 		smartypants = markdownConfigDefaults.smartypants,
-		callouts = markdownConfigDefaults.callouts,
+		studiocms = markdownConfigDefaults.studiocms,
 	} = opts ?? {};
+
+	let autolink = true;
+	let calloutsEnabled = true;
+	let calloutsConfig: StudioCMSCalloutOptions = { theme: 'obsidian' };
+
+	if (typeof studiocms === 'boolean') {
+		autolink = studiocms;
+		calloutsEnabled = studiocms;
+	} else if (typeof studiocms === 'object') {
+		autolink = studiocms.autolink ?? autolink;
+		calloutsEnabled = studiocms.callouts !== false;
+		if (typeof studiocms.callouts === 'object') {
+			calloutsConfig = studiocms.callouts;
+		}
+	}
 
 	const loadedRemarkPlugins = await Promise.all(loadPlugins(remarkPlugins));
 	const loadedRehypePlugins = await Promise.all(loadPlugins(rehypePlugins));
@@ -157,10 +176,14 @@ export async function createMarkdownProcessor(
 	parser.use(rehypeHeadingIds);
 
 	// Autolink headings
-	parser.use(rehypeAutoLink, rehypeAutolinkOptions);
+	if (autolink) {
+		parser.use(rehypeAutoLink, rehypeAutolinkOptions);
+	}
 
 	// Callouts
-	parser.use(rehypeCallouts, callouts);
+	if (calloutsEnabled) {
+		parser.use(rehypeCallouts, calloutsConfig);
+	}
 
 	// Stringify to HTML
 	parser.use(rehypeRaw).use(rehypeStringify, { allowDangerousHtml: true });

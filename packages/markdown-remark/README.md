@@ -29,6 +29,8 @@ pnpm add @studiocms/markdown-remark
 
 ### As an Astro Integration
 
+With the Astro integration enabled, you can either pass in custom components into your astro config, or manually for the specific render your trying to do shown in the following methods.
+
 #### Setup the integration
 
 **`astro.config.mjs`**
@@ -44,7 +46,24 @@ export default defineConfig({
         * https://docs.astro.build/en/reference/configuration-reference/#markdown-options 
         */ 
     },
-    integrations: [markdownRemark()],
+    integrations: [markdownRemark({
+        // Used for injecting CSS for Headings and Callouts
+        injectCSS: true,
+        // User defined components that will be used when processing markdown
+        components: {
+            // Example of a custom defined component
+            custom: "./src/components/Custom.astro",
+        },
+        // Custom Markdown config
+        markdown: {
+            // Configure the available callout themes
+            callouts: {
+                theme: 'obsidian' // Can also be 'github' or 'vitepress'
+            },
+            autoLinkHeadings: true,
+            sanitize: {} // see https://github.com/natemoo-re/ultrahtml?tab=readme-ov-file#sanitization for full options
+        }
+    })],
 });
 ```
 
@@ -55,6 +74,7 @@ export default defineConfig({
 ```astro
 ---
 import { Markdown } from 'studiocms:markdown-remark';
+import Custom from '../components/Custom.astro';
 ---
 <html>
     <head>
@@ -63,7 +83,7 @@ import { Markdown } from 'studiocms:markdown-remark';
         <title>Example</title>
     </head>
     <body>
-        <Markdown content={`# Hello World!`} />
+        <Markdown content={`# Hello World! <custom></custom>`} components={{ custom: Custom }} />
     </body>
 </html>
 ```
@@ -73,8 +93,10 @@ OR
 ```astro
 ---
 import { render } from 'studiocms:markdown-remark';
+import Custom from '../components/Custom.astro';
 
-const { html } = render('# Hello World!')
+// @ts-ignore
+const { html } = render('# Hello World! <custom></custom>', {}, { $$result, {custom: Custom} })
 ---
 <html>
     <head>

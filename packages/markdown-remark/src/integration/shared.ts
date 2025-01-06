@@ -1,16 +1,6 @@
-import type { AstroConfig } from 'astro';
+import type { Shared } from './types.js';
 
 export const symbol: symbol = Symbol.for('@studiocms/markdown-remark');
-
-/**
- * Interface representing shared configuration for markdown.
- *
- * @interface Shared
- * @property {AstroConfig['markdown']} markdownConfig - The markdown configuration from AstroConfig.
- */
-export interface Shared {
-	markdownConfig: AstroConfig['markdown'];
-}
 
 /**
  * A shared object that is either retrieved from the global scope using a symbol or

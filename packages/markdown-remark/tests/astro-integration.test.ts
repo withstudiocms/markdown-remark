@@ -41,6 +41,14 @@ describe('Markdown-Remark Astro Integration Tests', () => {
 <details dir="auto" class="callout callout-collapsible" style="--callout-color-light: rgb(236, 117, 0); --callout-color-dark: rgb(233, 151, 63);"><summary class="callout-title"><div class="callout-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><div class="callout-title-inner">This is a <strong>collapsible</strong> callout</div><div class="callout-fold" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></div></summary><div class="callout-content"><p>Some content shown after opening!</p></div></details>`);
 	});
 
+	test('Custom Components test', async () => {
+		const content = await fixture.readFile('custom-components/index.html');
+
+		expect(content).toContain(
+			'<div> <h1>Custom Component</h1> <p>This is a custom component</p> </div>'
+		);
+	});
+
 	test('Direct Markdown Processor Tests', async () => {
 		const content = await fixture.readFile('direct/index.html');
 

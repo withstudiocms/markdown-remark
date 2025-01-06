@@ -1,69 +1,38 @@
+import { componentKeys } from 'studiocms:markdown-remark/user-components';
 import type { SSRResult } from 'astro';
 import { renderSlot } from 'astro/runtime/server/index.js';
-import type { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
-import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
-import type { HTMLString } from '../processor/HTMLString.js';
+import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
+import { HTMLString } from '../processor/HTMLString.js';
 import {
-	type MarkdownHeading,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
 } from '../processor/index.js';
+import { TransformToProcessor } from './schema.js';
 import { shared } from './shared.js';
+import type {
+	ComponentSlots,
+	MarkdownComponentAttributes,
+	Props,
+	RenderComponents,
+	RenderResponse,
+} from './types.js';
+import {
+	createComponentProxy,
+	importComponentsKeys,
+	mergeRecords,
+	transformHTML,
+} from './utils.js';
+
+export type { Props, RenderResponse } from './types.js';
+
+const studiocmsMarkdownExtended = TransformToProcessor.parse(shared.studiocms);
 
 const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
-	callouts: {
-		theme: 'obsidian',
-	},
+	...studiocmsMarkdownExtended,
 });
 
-/**
- * Represents the response from rendering a markdown document.
- */
-export interface RenderResponse {
-	/**
-	 * The rendered HTML content as a string.
-	 */
-	html: HTMLString;
-
-	/**
-	 * Metadata extracted from the markdown document.
-	 */
-	meta: {
-		/**
-		 * An array of headings found in the markdown document.
-		 */
-		headings: MarkdownHeading[];
-
-		/**
-		 * An array of image paths found in the markdown document.
-		 */
-		imagePaths: string[];
-
-		/**
-		 * The frontmatter data extracted from the markdown document.
-		 *
-		 * @remarks
-		 * The frontmatter is represented as a record with string keys and values of any type.
-		 */
-
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		frontmatter: Record<string, any>;
-	};
-}
-
-/**
- * Interface representing the properties for a markdown component.
- *
- * @property content - The markdown content as a string.
- * @property [name: string] - An index signature allowing additional properties with string keys and values of any type.
- */
-export interface Props {
-	content: string;
-
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	[name: string]: any;
-}
+const predefinedComponents = await importComponentsKeys(componentKeys);
 
 /**
  * Renders the given markdown content using the specified options.
@@ -74,13 +43,26 @@ export interface Props {
  */
 export async function render(
 	content: string,
-	options?: MarkdownProcessorRenderOptions
+	options?: MarkdownProcessorRenderOptions,
+	componentProxy?: RenderComponents,
+	sanitizeOpts?: SanitizeOptions
 ): Promise<RenderResponse> {
-	const result = await processor.render(content, options);
+	const componentsRendered = createComponentProxy(
+		componentProxy?.$$result,
+		mergeRecords(predefinedComponents, componentProxy?.components ?? {})
+	);
+
+	const { code, metadata } = await processor.render(content, options);
+
+	const html = await transformHTML(
+		code,
+		componentsRendered,
+		sanitizeOpts ?? shared.studiocms.sanitize
+	);
 
 	return {
-		html: result.astroHTML,
-		meta: result.metadata,
+		html: new HTMLString(html),
+		meta: metadata,
 	};
 }
 
@@ -113,25 +95,27 @@ export async function render(
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const Markdown: (props: Props) => any = Object.assign(
 	function Markdown(
-		result: SSRResult,
-		attributes: { content: string },
-		slots: { default: ComponentSlotValue | RenderTemplateResult }
+		$$result: SSRResult,
+		{ content, components, sanitizeOpts }: MarkdownComponentAttributes,
+		{ default: slotted }: ComponentSlots
 	) {
 		return {
 			get [Symbol.toStringTag]() {
 				return 'AstroComponent';
 			},
 			async *[Symbol.asyncIterator]() {
-				const mdl = attributes.content;
-
-				if (typeof mdl === 'string') {
-					yield (
-						await render(mdl, {
+				if (typeof content === 'string') {
+					const { html } = await render(
+						content,
+						{
 							fileURL: new URL(import.meta.url),
-						})
-					).html;
+						},
+						{ $$result, components },
+						sanitizeOpts
+					);
+					yield html;
 				} else {
-					yield renderSlot(result, slots.default);
+					yield renderSlot($$result, slotted);
 				}
 			},
 		};
