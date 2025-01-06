@@ -71,5 +71,8 @@ export interface ComponentSlots {
  */
 export interface Shared {
 	markdownConfig: AstroConfig['markdown'];
-	callouts: CalloutConfig;
+	studiocms: {
+		callouts: CalloutConfig;
+		autolink: boolean;
+	};
 }

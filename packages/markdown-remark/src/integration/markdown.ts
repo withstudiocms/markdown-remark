@@ -26,7 +26,7 @@ export type { Props, RenderResponse } from './types.js';
 
 const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
-	...shared.callouts,
+	studiocms: shared.studiocms,
 });
 
 const predefinedComponents = await importComponentsKeys(componentKeys);

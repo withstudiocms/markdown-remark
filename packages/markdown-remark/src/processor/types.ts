@@ -56,9 +56,16 @@ export interface AstroMarkdownOptions {
 }
 
 export interface StudioCMSMarkdownOptions extends AstroMarkdownOptions {
-	callouts?: {
-		theme?: 'github' | 'obsidian' | 'vitepress';
-	};
+	studiocms?:
+		| {
+				callouts?:
+					| {
+							theme?: 'github' | 'obsidian' | 'vitepress';
+					  }
+					| false;
+				autolink?: boolean;
+		  }
+		| false;
 }
 
 export interface MarkdownProcessor {

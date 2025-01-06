@@ -27,6 +27,11 @@ const MarkdownSchema = z
 		callouts: CalloutsSchema,
 
 		/**
+		 * Enables autolinking of headings.
+		 */
+		autolink: z.boolean().optional().default(true),
+
+		/**
 		 * Configures the user defined components for the Markdown processor.
 		 */
 		components: z.record(z.string(), z.string()).optional().default({}),

@@ -15,7 +15,7 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 	// Parse the options
 	const {
 		injectCSS,
-		markdown: { callouts, components },
+		markdown: { callouts, components, autolink },
 	} = MarkdownRemarkOptionsSchema.parse(opts);
 
 	// Create a resolver for the current file
@@ -67,7 +67,7 @@ export function markdownRemark(opts?: MarkdownRemarkOptions): AstroIntegration {
 
 				// Inject the Markdown configuration into the shared state
 				shared.markdownConfig = config.markdown;
-				shared.callouts = callouts;
+				shared.studiocms = { callouts, autolink };
 
 				// Inject types for the Markdown Remark processor
 				injectTypes({
