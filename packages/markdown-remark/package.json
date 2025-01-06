@@ -21,7 +21,7 @@
       "types": "./dist/processor/index.d.ts",
       "default": "./dist/processor/index.js"
     },
-    "./assets/*": "./assets/*"
+    "./styles/*": "./dist/integration/styles/*"
   },
   "imports": {
     "#import-plugin": {
@@ -30,14 +30,13 @@
     }
   },
   "files": [
-    "dist",
-    "assets"
+    "dist"
   ],
   "scripts": {
     "prepublish": "pnpm build",
-    "build": "run-scripts build \"src/**/*.ts\" && tsc -p tsconfig.json",
-    "build:ci": "run-scripts build \"src/**/*.ts\"",
-    "dev": "run-scripts dev \"src/**/*.ts\"",
+    "build": "run-scripts build \"src/**/*.{ts,css}\" && tsc -p tsconfig.json",
+    "build:ci": "run-scripts build \"src/**/*.{ts,css}\"",
+    "dev": "run-scripts dev \"src/**/*.{ts,css}\"",
     "test": "pnpm build && vitest run"
   },
   "peerDependencies": {

@@ -24,7 +24,7 @@ export function markdownRemark(opts?: StudioCMSMarkdownRemarkOptions): AstroInte
 
 	// Resolve the callout theme based on the user's configuration
 	const resolvedCalloutTheme = resolve(
-		`../../assets/callout-themes/${markdownExtended.callouts.theme}.css`
+		`./styles/callout-themes/${markdownExtended.callouts.theme}.css`
 	);
 
 	return {
@@ -42,7 +42,7 @@ export function markdownRemark(opts?: StudioCMSMarkdownRemarkOptions): AstroInte
 						'studiocms:markdown-remark': `export * from '${resolve('./markdown.js')}';`,
 						// Styles for the Markdown Remark processor
 						'studiocms:markdown-remark/css': `
-							import '${resolve('../../assets/headings.css')}';
+							import '${resolve('./styles/headings.css')}';
 							${markdownExtended.callouts.enabled ? `import '${resolvedCalloutTheme}';` : ''}
 						`,
 						// User defined components for the Markdown processor
