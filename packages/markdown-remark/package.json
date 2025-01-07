@@ -35,7 +35,7 @@
   "scripts": {
     "prepublish": "pnpm build",
     "build": "run-scripts build \"src/**/*.{ts,css}\" && tsc -p tsconfig.json",
-    "build:ci": "run-scripts build \"src/**/*.{ts,css}\"",
+    "build:ci": "run-scripts build \"src/**/*.{ts,css}\" && tsc -p tsconfig.json",
     "dev": "run-scripts dev \"src/**/*.{ts,css}\"",
     "test": "pnpm build && vitest run"
   },
