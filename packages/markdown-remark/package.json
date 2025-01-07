@@ -11,11 +11,11 @@
   },
   "bugs": "https://github.com/withstudiocms/markdown-remark/issues",
   "homepage": "https://studiocms.dev",
-  "main": "./dist/index.js",
+  "main": "./dist/integration/index.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/integration/index.d.ts",
+      "default": "./dist/integration/index.js"
     },
     "./integration": {
       "types": "./dist/integration/index.d.ts",

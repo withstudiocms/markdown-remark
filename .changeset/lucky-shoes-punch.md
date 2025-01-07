@@ -4,7 +4,7 @@
 
 Refactor integration exports and simplification
 
-- Default package export `@studiocms/markdown-remark` now only exports the integration and integration options types.
+- Default package export `@studiocms/markdown-remark` now exports the same resources as `@studiocms/markdown-remark/integration`
 
 New Export:
 - `@studiocms/markdown-remark/integration` - Direct export of the included Astro integration
