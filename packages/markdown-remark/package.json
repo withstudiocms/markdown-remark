@@ -45,7 +45,6 @@
   "dependencies": {
     "@astrojs/prism": "^3.2.0",
     "astro-integration-kit": "^0.18.0",
-    "entities": "^6.0.0",
     "github-slugger": "^2.0.0",
     "hastscript": "^9.0.0",
     "hast-util-from-html": "^2.0.3",

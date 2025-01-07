@@ -1,10 +1,10 @@
 import { AstroError } from 'astro/errors';
 import { jsx as h } from 'astro/jsx-runtime';
 import { renderJSX } from 'astro/runtime/server/jsx.js';
-import * as entities from 'entities';
 import { __unsafeHTML, transform } from 'ultrahtml';
 import sanitize, { type SanitizeOptions } from 'ultrahtml/transformers/sanitize';
 import swap from 'ultrahtml/transformers/swap';
+import { decode } from './decoder/index.js';
 
 /**
  * Creates a proxy for components that can either be strings or functions.
@@ -35,7 +35,7 @@ export function createComponentProxy(
 				children: { value: any }
 			) => {
 				if (key === 'codeblock' || key === 'codespan') {
-					props.code = entities.decode(JSON.parse(`"${props.code}"`));
+					props.code = decode(JSON.parse(`"${props.code}"`));
 				}
 				const output = await renderJSX(result, h(value, { ...props, 'set:html': children.value }));
 				return __unsafeHTML(output);
