@@ -1,7 +1,9 @@
+import type { Root } from 'hast';
 import { isElement } from 'hast-util-is-element';
 import { h } from 'hastscript';
+import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-
+import type { UserOptions } from './types.js';
 import {
 	calloutRegex,
 	expandCallouts,
@@ -13,10 +15,6 @@ import {
 	handleBrAfterTitle,
 	splitByNewlineRegex,
 } from './utils.js';
-
-import type { Root } from 'hast';
-import type { Plugin } from 'unified';
-import type { UserOptions } from './types.js';
 
 /**
  * A rehype plugin for rendering themed callouts (admonitions/alerts).
