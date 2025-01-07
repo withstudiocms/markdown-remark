@@ -105,7 +105,7 @@ export default async function build(...args) {
 }
 
 async function clean(outdir) {
-	const files = await glob([`${outdir}/**`, `!${outdir}/**/*.d.ts`], { filesOnly: true });
+	const files = await glob([`${outdir}/**`], { filesOnly: true });
 	await Promise.all(files.map((file) => fs.rm(file, { force: true })));
 }
 
