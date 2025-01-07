@@ -5,7 +5,7 @@ import { dim, green, red, yellow } from 'kleur/colors';
 
 /** @type {import('esbuild').BuildOptions} */
 const defaultConfig = {
-	minify: false,
+	minify: false, // DO NOT ENABLE THIS, it creates an error during runtime due to removing the /* @vite-ignore */ comments from a few import() calls
 	format: 'esm',
 	platform: 'node',
 	target: 'node18',
@@ -32,7 +32,7 @@ export default async function build(...args) {
 	);
 
 	const noClean = args.includes('--no-clean-dist');
-	const bundle = args.includes('--bundle');
+	const noBundle = args.includes('--no-bundle');
 	const forceCJS = args.includes('--cjs');
 
 	const {
@@ -57,8 +57,8 @@ export default async function build(...args) {
 	if (!isDev) {
 		await esbuild.build({
 			...config,
-			bundle,
-			external: bundle
+			bundle: !noBundle,
+			external: !noBundle
 				? Object.keys({ ...peerDependencies, ...dependencies, ...imports })
 				: undefined,
 			entryPoints,
