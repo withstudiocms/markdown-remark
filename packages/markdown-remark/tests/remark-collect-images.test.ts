@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { type MarkdownProcessor, createMarkdownProcessor } from '../dist/index.js';
+import { type MarkdownProcessor, createMarkdownProcessor } from '../dist/processor/index.js';
 
 describe('collect images', () => {
 	let processor: MarkdownProcessor;

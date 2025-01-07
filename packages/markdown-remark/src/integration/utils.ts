@@ -132,7 +132,11 @@ export async function importComponentsKeys() {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const predefinedComponents: Record<string, any> = {};
 
-	const mod = import('studiocms:markdown-remark/user-components');
+	const mod = import('studiocms:markdown-remark/user-components').catch((e) => {
+		const newErr = prefixError(e, 'Failed to import user components');
+		console.error(newErr);
+		throw new MarkdownRemarkError(newErr.message, newErr.stack);
+	});
 
 	const componentKeys = (await mod).componentKeys;
 

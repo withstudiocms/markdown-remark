@@ -33,10 +33,14 @@ export default async function build(...args) {
 
 	const noClean = args.includes('--no-clean-dist');
 	const bundle = args.includes('--bundle');
-	const forceCJS = args.includes('--force-cjs');
-	const copyWASM = args.includes('--copy-wasm');
+	const forceCJS = args.includes('--cjs');
 
-	const { type = 'module', dependencies = {} } = await readPackageJSON('./package.json');
+	const {
+		type = 'module',
+		dependencies = {},
+		peerDependencies = {},
+		imports = {},
+	} = await readPackageJSON('./package.json');
 
 	config.define = {};
 	for (const [key, value] of await getDefinedEntries()) {
@@ -54,7 +58,9 @@ export default async function build(...args) {
 		await esbuild.build({
 			...config,
 			bundle,
-			external: bundle ? Object.keys(dependencies) : undefined,
+			external: bundle
+				? Object.keys({ ...peerDependencies, ...dependencies, ...imports })
+				: undefined,
 			entryPoints,
 			outdir,
 			outExtension: forceCJS ? { '.js': '.cjs' } : {},
@@ -64,7 +70,7 @@ export default async function build(...args) {
 	}
 
 	const rebuildPlugin = {
-		name: 'astro:rebuild',
+		name: 'dev:rebuild',
 		setup(build) {
 			build.onEnd(async (result) => {
 				const date = dt.format(new Date());

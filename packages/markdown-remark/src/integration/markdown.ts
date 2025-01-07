@@ -1,8 +1,8 @@
 import type { SSRResult } from 'astro';
 import { renderSlot } from 'astro/runtime/server/index.js';
 import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
-import { HTMLString } from '../processor/HTMLString.js';
 import {
+	HTMLString,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
 } from '../processor/index.js';

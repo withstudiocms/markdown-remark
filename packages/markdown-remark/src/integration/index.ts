@@ -1,5 +1,5 @@
 import type { AstroIntegration } from 'astro';
-import { addVirtualImports, createResolver } from 'astro-integration-kit';
+import { addVirtualImports, createResolver } from './integration-utils.js';
 import {
 	type StudioCMSMarkdownRemarkOptions,
 	StudioCMSMarkdownRemarkOptionsSchema,

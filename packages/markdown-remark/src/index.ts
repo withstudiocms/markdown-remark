@@ -1,6 +1,5 @@
-export * from './processor/index.js';
-export {
-	markdownRemark,
-	default,
-	type StudioCMSMarkdownRemarkOptions,
-} from './integration/index.js';
+import { type StudioCMSMarkdownRemarkOptions, markdownRemark } from './integration/index.js';
+
+export type { StudioCMSMarkdownRemarkOptions };
+
+export default markdownRemark;
