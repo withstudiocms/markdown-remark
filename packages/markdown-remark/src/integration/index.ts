@@ -39,7 +39,9 @@ export function markdownRemark(opts?: StudioCMSMarkdownRemarkOptions): AstroInte
 					name: '@studiocms/markdown-remark',
 					imports: {
 						// The main Markdown Remark processor
-						'studiocms:markdown-remark': `export * from '${resolve('./markdown.js')}';`,
+						'studiocms:markdown-remark': `
+							export { render, Markdown, Props, RenderResponse } from '${resolve('./markdown.js')}';
+						`,
 						// Styles for the Markdown Remark processor
 						'studiocms:markdown-remark/css': `
 							import '${resolve('./styles/headings.css')}';
