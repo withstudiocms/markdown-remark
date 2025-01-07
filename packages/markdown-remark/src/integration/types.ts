@@ -1,4 +1,4 @@
-import type { AstroConfig } from 'astro';
+import type { AstroConfig, SSRResult } from 'astro';
 import type { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
 import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
 import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
@@ -14,6 +14,13 @@ export interface RenderResponse {
 	 * The rendered HTML content as a string.
 	 */
 	html: HTMLString;
+
+	/**
+	 * The HTML content of the markdown document before rendering.
+	 *
+	 * use this with astro's `set:html` prop to render markdown content as HTML
+	 */
+	code: string;
 
 	/**
 	 * Metadata extracted from the markdown document.
@@ -42,8 +49,7 @@ export interface RenderResponse {
 }
 
 export interface RenderComponents {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	$$result?: any;
+	$$result: SSRResult;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	components?: Record<string, any>;
 }

@@ -1,5 +1,6 @@
+import type { SSRResult } from 'astro';
 import { AstroError } from 'astro/errors';
-import { jsx as h } from 'astro/jsx-runtime';
+import { jsx } from 'astro/jsx-runtime';
 import { renderJSX } from 'astro/runtime/server/jsx.js';
 import { __unsafeHTML, transform } from 'ultrahtml';
 import sanitize, { type SanitizeOptions } from 'ultrahtml/transformers/sanitize';
@@ -17,8 +18,7 @@ import { decode } from './decoder/index.js';
  * @returns A record of proxied components.
  */
 export function createComponentProxy(
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	result: any,
+	result: SSRResult,
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	_components: Record<string, any> = {}
 ) {
@@ -37,7 +37,10 @@ export function createComponentProxy(
 				if (key === 'codeblock' || key === 'codespan') {
 					props.code = decode(JSON.parse(`"${props.code}"`));
 				}
-				const output = await renderJSX(result, h(value, { ...props, 'set:html': children.value }));
+				const output = await renderJSX(
+					result,
+					jsx(value, { ...props, 'set:html': children.value })
+				);
 				return __unsafeHTML(output);
 			};
 		}
@@ -125,15 +128,17 @@ export function prefixError(err: any, prefix: string): any {
  * @returns A promise that resolves to an object containing the imported components.
  * @throws {MarkdownRemarkError} If any component fails to import, an error is thrown with a prefixed message.
  */
-export async function importComponentsKeys(keys: string[]) {
+export async function importComponentsKeys() {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const predefinedComponents: Record<string, any> = {};
 
-	for (const key of keys) {
+	const mod = import('studiocms:markdown-remark/user-components');
+
+	const componentKeys = (await mod).componentKeys;
+
+	for (const key of componentKeys) {
 		try {
-			predefinedComponents[key.toLowerCase()] = (
-				await import('studiocms:markdown-remark/user-components')
-			)[key.toLowerCase()];
+			predefinedComponents[key.toLowerCase()] = (await mod)[key.toLowerCase()];
 		} catch (e) {
 			if (e instanceof Error) {
 				const newErr = prefixError(e, `Failed to import component "${key}"`);
