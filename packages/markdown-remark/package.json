@@ -21,6 +21,18 @@
       "types": "./dist/integration/index.d.ts",
       "default": "./dist/integration/index.js"
     },
+    "./integration/utils": {
+      "types": "./dist/integration/utils.d.ts",
+      "default": "./dist/integration/utils.js"
+    },
+    "./integration/shared": {
+      "types": "./dist/integration/shared.d.ts",
+      "default": "./dist/integration/shared.js"
+    },
+    "./integration/schema": {
+      "types": "./dist/integration/schema.d.ts",
+      "default": "./dist/integration/schema.js"
+    },
     "./processor": {
       "types": "./dist/processor/index.d.ts",
       "default": "./dist/processor/index.js"
