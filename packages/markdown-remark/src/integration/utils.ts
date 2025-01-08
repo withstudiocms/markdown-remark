@@ -1,11 +1,28 @@
 import type { SSRResult } from 'astro';
-import { AstroError } from 'astro/errors';
 import { jsx } from 'astro/jsx-runtime';
 import { renderJSX } from 'astro/runtime/server/jsx.js';
 import { __unsafeHTML, transform } from 'ultrahtml';
 import sanitize, { type SanitizeOptions } from 'ultrahtml/transformers/sanitize';
 import swap from 'ultrahtml/transformers/swap';
 import { decode } from './decoder/index.js';
+
+/**
+ * Merges multiple records into a single record. If there are duplicate keys, the value from the last record with that key will be used.
+ *
+ * @param {...Record<string, any>[]} records - The records to merge.
+ * @returns {Record<string, any>} - The merged record.
+ */
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function mergeRecords(...records: Record<string, any>[]): Record<string, any> {
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	const result: Record<string, any> = {};
+	for (const record of records) {
+		for (const [key, value] of Object.entries(record)) {
+			result[key.toLowerCase()] = value;
+		}
+	}
+	return result;
+}
 
 /**
  * Creates a proxy for components that can either be strings or functions.
@@ -73,89 +90,6 @@ export function dedent(str: string): string {
 	}
 	if (indent.length === 0) return lns.join('\n');
 	return lns.map((ln) => (ln.startsWith(indent) ? ln.slice(indent.length) : ln)).join('\n');
-}
-
-/**
- * Merges multiple records into a single record. If there are duplicate keys, the value from the last record with that key will be used.
- *
- * @param {...Record<string, any>[]} records - The records to merge.
- * @returns {Record<string, any>} - The merged record.
- */
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export function mergeRecords(...records: Record<string, any>[]): Record<string, any> {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const result: Record<string, any> = {};
-	for (const record of records) {
-		for (const [key, value] of Object.entries(record)) {
-			result[key.toLowerCase()] = value;
-		}
-	}
-	return result;
-}
-
-export class MarkdownRemarkError extends AstroError {
-	name = 'StudioCMS Markdown Remark Error';
-}
-
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export function prefixError(err: any, prefix: string): any {
-	// If the error is an object with a `message` property, attempt to prefix the message
-	if (err?.message) {
-		try {
-			err.message = `${prefix}:\n${err.message}`;
-			return err;
-		} catch {
-			// Any errors here are ok, there's fallback code below
-		}
-	}
-
-	// If that failed, create a new error with the desired message and attempt to keep the stack
-	const wrappedError = new Error(`${prefix}${err ? `: ${err}` : ''}`);
-	try {
-		wrappedError.stack = err.stack;
-		wrappedError.cause = err;
-	} catch {
-		// It's ok if we could not set the stack or cause - the message is the most important part
-	}
-
-	return wrappedError;
-}
-
-/**
- * Imports components by their keys from the 'studiocms:markdown-remark/user-components' module.
- *
- * @param keys - An array of strings representing the keys of the components to import.
- * @returns A promise that resolves to an object containing the imported components.
- * @throws {MarkdownRemarkError} If any component fails to import, an error is thrown with a prefixed message.
- */
-export async function importComponentsKeys() {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const predefinedComponents: Record<string, any> = {};
-
-	const mod = import('studiocms:markdown-remark/user-components').catch((e) => {
-		const newErr = prefixError(e, 'Failed to import user components');
-		console.error(newErr);
-		throw new MarkdownRemarkError(newErr.message, newErr.stack);
-	});
-
-	const componentKeys = (await mod).componentKeys;
-
-	for (const key of componentKeys) {
-		try {
-			predefinedComponents[key.toLowerCase()] = (await mod)[key.toLowerCase()];
-		} catch (e) {
-			if (e instanceof Error) {
-				const newErr = prefixError(e, `Failed to import component "${key}"`);
-				console.error(newErr);
-				throw new MarkdownRemarkError(newErr.message, newErr.stack);
-			}
-			const newErr = prefixError(new Error('Unknown error'), `Failed to import component "${key}"`);
-			console.error(newErr);
-			throw new MarkdownRemarkError(newErr.message, newErr.stack);
-		}
-	}
-
-	return predefinedComponents;
 }
 
 export async function transformHTML(

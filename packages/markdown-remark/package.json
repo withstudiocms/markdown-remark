@@ -31,6 +31,10 @@
     "#import-plugin": {
       "browser": "./dist/processor/import-plugin-browser.js",
       "default": "./dist/processor/import-plugin-default.js"
+    },
+    "#processor": {
+      "types": "./dist/processor/index.d.ts",
+      "default": "./dist/processor/index.js"
     }
   },
   "files": [

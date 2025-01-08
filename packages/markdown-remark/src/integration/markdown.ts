@@ -5,7 +5,8 @@ import {
 	HTMLString,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
-} from '../processor/index.js';
+} from '#processor';
+import { importComponentsKeys } from './runtime.js';
 import { TransformToProcessor } from './schema.js';
 import { shared } from './shared.js';
 import type {
@@ -15,12 +16,7 @@ import type {
 	RenderComponents,
 	RenderResponse,
 } from './types.js';
-import {
-	createComponentProxy,
-	importComponentsKeys,
-	mergeRecords,
-	transformHTML,
-} from './utils.js';
+import { createComponentProxy, mergeRecords, transformHTML } from './utils.js';
 
 export type { Props, RenderResponse } from './types.js';
 

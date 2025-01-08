@@ -2,7 +2,7 @@ import type { AstroConfig, SSRResult } from 'astro';
 import type { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
 import type { ComponentSlotValue } from 'astro/runtime/server/render/slot.js';
 import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
-import type { HTMLString, MarkdownHeading } from '../processor/index.js';
+import type { HTMLString, MarkdownHeading } from '../processor/types.js';
 import type { StudioCMSMarkdownExtendedConfig } from './schema.js';
 
 /**
