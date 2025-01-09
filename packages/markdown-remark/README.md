@@ -167,7 +167,7 @@ See the [Changelog](https://github.com/withstudiocms/markdown-remark/blob/main/p
 
 ## Contribution
 
-If you see any errors or room for improvement, feel free to open an [issues or pull request](https://github.com/withstudiocms/markdown-remark/) . Thank you in advance for contributing! ❤️
+If you see any errors or room for improvement, feel free to open an [issue or pull request](https://github.com/withstudiocms/markdown-remark/) . Thank you in advance for contributing! ❤️
 
 ## Licensing
 
