@@ -8,6 +8,8 @@ import type { CreateShikiHighlighterOptions, ShikiHighlighterHighlightOptions } 
 
 export type { Node } from 'unist';
 
+export type { HTMLString };
+
 declare module 'vfile' {
 	interface DataMap {
 		astro: {

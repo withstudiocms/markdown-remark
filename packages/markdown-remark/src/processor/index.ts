@@ -49,6 +49,7 @@ export {
 	type CreateShikiHighlighterOptions,
 	type ShikiHighlighterHighlightOptions,
 } from './shiki.js';
+export { HTMLString } from './HTMLString.js';
 export * from './types.js';
 
 export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {

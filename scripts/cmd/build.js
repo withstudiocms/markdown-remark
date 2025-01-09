@@ -1,23 +1,40 @@
+import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import esbuild from 'esbuild';
 import glob from 'fast-glob';
-import { dim, green, red, yellow } from 'kleur/colors';
+import { dim, gray, green, red, yellow } from 'kleur/colors';
 
 /** @type {import('esbuild').BuildOptions} */
 const defaultConfig = {
-	minify: false,
+	minify: false, // DO NOT ENABLE THIS, it creates an error during runtime due to removing the /* @vite-ignore */ comments from a few import() calls
 	format: 'esm',
 	platform: 'node',
 	target: 'node18',
 	sourcemap: false,
 	sourcesContent: false,
-	logLevel: 'info',
 };
 
 const dt = new Intl.DateTimeFormat('en-us', {
 	hour: '2-digit',
 	minute: '2-digit',
 });
+
+const dtsGen = {
+	name: 'TypeScriptDeclarationsPlugin',
+	setup(build) {
+		build.onEnd((result) => {
+			if (result.errors.length > 0) return;
+			const date = dt.format(new Date());
+			console.log(`${dim(`[${date}]`)} Generating TypeScript declarations...`);
+			try {
+				execSync('tsc --emitDeclarationOnly -p tsconfig.json --outDir ./dist');
+				console.log(dim(`[${date}] `) + green('√ Generated TypeScript declarations'));
+			} catch (error) {
+				console.error(dim(`[${date}] `) + red(error));
+			}
+		});
+	},
+};
 
 export default async function build(...args) {
 	const config = Object.assign({}, defaultConfig);
@@ -31,12 +48,18 @@ export default async function build(...args) {
 		))
 	);
 
-	const noClean = args.includes('--no-clean-dist');
-	const bundle = args.includes('--bundle');
-	const forceCJS = args.includes('--force-cjs');
-	const copyWASM = args.includes('--copy-wasm');
+	const date = dt.format(new Date());
 
-	const { type = 'module', dependencies = {} } = await readPackageJSON('./package.json');
+	const noClean = args.includes('--no-clean-dist');
+	const noBundle = args.includes('--no-bundle');
+	const forceCJS = args.includes('--cjs');
+
+	const {
+		type = 'module',
+		dependencies = {},
+		peerDependencies = {},
+		imports = {},
+	} = await readPackageJSON('./package.json');
 
 	config.define = {};
 	for (const [key, value] of await getDefinedEntries()) {
@@ -47,24 +70,32 @@ export default async function build(...args) {
 	const outdir = 'dist';
 
 	if (!noClean) {
+		console.log(
+			`${dim(`[${date}]`)} Cleaning dist directory... ${dim(`(${entryPoints.length} files found)`)}`
+		);
 		await clean(outdir);
 	}
 
 	if (!isDev) {
+		console.log(`${dim(`[${date}]`)} Building... ${dim(`(${entryPoints.length} files found)`)}`);
 		await esbuild.build({
 			...config,
-			bundle,
-			external: bundle ? Object.keys(dependencies) : undefined,
+			bundle: !noBundle,
+			external: !noBundle
+				? Object.keys({ ...peerDependencies, ...dependencies, ...imports })
+				: undefined,
 			entryPoints,
 			outdir,
 			outExtension: forceCJS ? { '.js': '.cjs' } : {},
 			format,
+			plugins: [dtsGen],
 		});
+		console.log(dim(`[${date}] `) + green('√ Build Complete'));
 		return;
 	}
 
 	const rebuildPlugin = {
-		name: 'astro:rebuild',
+		name: 'dev:rebuild',
 		setup(build) {
 			build.onEnd(async (result) => {
 				const date = dt.format(new Date());
@@ -72,11 +103,11 @@ export default async function build(...args) {
 					console.error(dim(`[${date}] `) + red(error || result.errors.join('\n')));
 				} else {
 					if (result.warnings.length) {
-						console.info(
-							dim(`[${date}] `) + yellow(`! updated with warnings:\n${result.warnings.join('\n')}`)
+						console.log(
+							dim(`[${date}] `) + yellow(`! Updated with warnings:\n${result.warnings.join('\n')}`)
 						);
 					}
-					console.info(dim(`[${date}] `) + green('√ updated'));
+					console.log(dim(`[${date}] `) + green('√ Updated'));
 				}
 			});
 		},
@@ -88,9 +119,12 @@ export default async function build(...args) {
 		outdir,
 		format,
 		sourcemap: 'linked',
-		plugins: [rebuildPlugin],
+		plugins: [rebuildPlugin, dtsGen],
 	});
 
+	console.log(
+		`${dim(`[${date}] `) + gray('Watching for changes...')} ${dim(`(${entryPoints.length} files found)`)}`
+	);
 	await builder.watch();
 
 	process.on('beforeExit', () => {
@@ -99,7 +133,7 @@ export default async function build(...args) {
 }
 
 async function clean(outdir) {
-	const files = await glob([`${outdir}/**`, `!${outdir}/**/*.d.ts`], { filesOnly: true });
+	const files = await glob([`${outdir}/**`], { filesOnly: true });
 	await Promise.all(files.map((file) => fs.rm(file, { force: true })));
 }
 

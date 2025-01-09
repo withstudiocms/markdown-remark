@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "@studiocms/markdown-remark": "workspace:*",
-    "astro": "^5.1.2"
+    "astro": "^5.1.3"
   }
 }

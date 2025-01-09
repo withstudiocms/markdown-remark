@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { extractFrontmatter, parseFrontmatter } from '../dist/index.js';
+import { extractFrontmatter, parseFrontmatter } from '../dist/processor/index.js';
 
 const bom = '\uFEFF';
 

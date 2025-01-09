@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from 'vitest';
-import { type MarkdownProcessor, createMarkdownProcessor } from '../dist/index.js';
+import { type MarkdownProcessor, createMarkdownProcessor } from '../dist/processor/index.js';
 
 describe('autolinking', () => {
 	describe('plain md', () => {

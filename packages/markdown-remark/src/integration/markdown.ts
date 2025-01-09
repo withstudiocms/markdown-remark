@@ -1,12 +1,12 @@
-import { componentKeys } from 'studiocms:markdown-remark/user-components';
 import type { SSRResult } from 'astro';
 import { renderSlot } from 'astro/runtime/server/index.js';
 import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
-import { HTMLString } from '../processor/HTMLString.js';
 import {
+	HTMLString,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
-} from '../processor/index.js';
+} from '#processor';
+import { importComponentsKeys } from './runtime.js';
 import { TransformToProcessor } from './schema.js';
 import { shared } from './shared.js';
 import type {
@@ -16,23 +16,17 @@ import type {
 	RenderComponents,
 	RenderResponse,
 } from './types.js';
-import {
-	createComponentProxy,
-	importComponentsKeys,
-	mergeRecords,
-	transformHTML,
-} from './utils.js';
+import { createComponentProxy, mergeRecords, transformHTML } from './utils.js';
 
 export type { Props, RenderResponse } from './types.js';
 
+const predefinedComponents = await importComponentsKeys();
 const studiocmsMarkdownExtended = TransformToProcessor.parse(shared.studiocms);
 
 const processor = await createMarkdownProcessor({
 	...shared.markdownConfig,
 	...studiocmsMarkdownExtended,
 });
-
-const predefinedComponents = await importComponentsKeys(componentKeys);
 
 /**
  * Renders the given markdown content using the specified options.
@@ -47,10 +41,15 @@ export async function render(
 	componentProxy?: RenderComponents,
 	sanitizeOpts?: SanitizeOptions
 ): Promise<RenderResponse> {
-	const componentsRendered = createComponentProxy(
-		componentProxy?.$$result,
-		mergeRecords(predefinedComponents, componentProxy?.components ?? {})
-	);
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	let componentsRendered: Record<string, any> = {};
+
+	if (componentProxy) {
+		componentsRendered = createComponentProxy(
+			componentProxy.$$result,
+			mergeRecords(predefinedComponents, componentProxy.components ?? {})
+		);
+	}
 
 	const { code, metadata } = await processor.render(content, options);
 
@@ -62,6 +61,7 @@ export async function render(
 
 	return {
 		html: new HTMLString(html),
+		code: html,
 		meta: metadata,
 	};
 }
