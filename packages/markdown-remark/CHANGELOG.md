@@ -1,5 +1,11 @@
 # @studiocms/markdown-remark
 
+## 0.3.1
+
+### Patch Changes
+
+- [#13](https://github.com/withstudiocms/markdown-remark/pull/13) [`066838b`](https://github.com/withstudiocms/markdown-remark/commit/066838ba7775b48bbb9953d310fafd9c2b78af6d) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - update readme
+
 ## 0.3.0
 
 ### Minor Changes
