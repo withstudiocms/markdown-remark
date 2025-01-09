@@ -1,5 +1,23 @@
 # @studiocms/markdown-remark
 
+## 0.3.0
+
+### Minor Changes
+
+- [#11](https://github.com/withstudiocms/markdown-remark/pull/11) [`b9d4b7b`](https://github.com/withstudiocms/markdown-remark/commit/b9d4b7b79a62bcf52fe1445f4b9d333ce618e6c9) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - Refactor integration exports and simplification
+
+  - Default package export `@studiocms/markdown-remark` now exports the same resources as `@studiocms/markdown-remark/integration`
+
+  New Export:
+
+  - `@studiocms/markdown-remark/integration` - Direct export of the included Astro integration
+
+  No longer depends on Astro-integration-kit.
+
+### Patch Changes
+
+- [#11](https://github.com/withstudiocms/markdown-remark/pull/11) [`b9d4b7b`](https://github.com/withstudiocms/markdown-remark/commit/b9d4b7b79a62bcf52fe1445f4b9d333ce618e6c9) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - Remove need for entities dependency, and change the one place it was being used.
+
 ## 0.2.0
 
 ### Minor Changes
