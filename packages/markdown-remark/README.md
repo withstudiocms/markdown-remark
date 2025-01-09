@@ -1,5 +1,9 @@
 # @studiocms/markdown-remark
 
+[![NPM Version](https://img.shields.io/npm/v/@studiocms/markdown-remark?style=for-the-badge&logo=npm)](https://npm.im/@studiocms/markdown-remark)
+[![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=for-the-badge&logo=biome)](https://biomejs.dev/)
+[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+
 ## Overview
 
 `@studiocms/markdown-remark` is a powerful Markdown parser and transformer built on top of [remark](https://github.com/remarkjs/remark). It provides seamless integration with [Astro](https://astro.build/), allowing you to easily parse and transform Markdown content within your Astro projects.
@@ -156,3 +160,15 @@ const content = await render("# Hello World!")
     </body>
 </html>
 ```
+
+## Changelog
+
+See the [Changelog](https://github.com/withstudiocms/markdown-remark/blob/main/packages/markdown-remark/CHANGELOG.md) for the change history of this package.
+
+## Contribution
+
+If you see any errors or room for improvement, feel free to open an [issues or pull request](https://github.com/withstudiocms/markdown-remark/) . Thank you in advance for contributing! ❤️
+
+## Licensing
+
+[MIT Licensed](./LICENSE).
