@@ -2,7 +2,7 @@
 
 [![NPM Version](https://img.shields.io/npm/v/@studiocms/markdown-remark?style=for-the-badge&logo=npm)](https://npm.im/@studiocms/markdown-remark)
 [![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=for-the-badge&logo=biome)](https://biomejs.dev/)
-[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+[![Built with Astro](https://astro.badg.es/v2/built-with-astro/small.svg)](https://astro.build)
 
 ## Overview
 
