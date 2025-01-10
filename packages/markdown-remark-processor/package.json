@@ -1,5 +1,5 @@
 {
-  "name": "@studiocms/markdown-remark",
+  "name": "@studiocms/markdown-remark-processor",
   "version": "0.3.1",
   "type": "module",
   "author": "studiocms",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/withstudiocms/markdown-remark.git",
-    "directory": "packages/markdown-remark"
+    "directory": "packages/markdown-remark-processor"
   },
   "bugs": "https://github.com/withstudiocms/markdown-remark/issues",
   "homepage": "https://studiocms.dev",
@@ -16,28 +16,21 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./utils": {
-      "types": "./dist/utils.d.ts",
-      "default": "./dist/utils.js"
-    },
-    "./shared": {
-      "types": "./dist/shared.d.ts",
-      "default": "./dist/shared.js"
-    },
-    "./schema": {
-      "types": "./dist/schema.d.ts",
-      "default": "./dist/schema.js"
-    },
-    "./styles/*": "./dist/styles/*"
+    }
+  },
+  "imports": {
+    "#import-plugin": {
+      "browser": "./dist/import-plugin-browser.js",
+      "default": "./dist/import-plugin-default.js"
+    }
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "prepublish": "pnpm build",
-    "build": "run-scripts build \"src/**/*.{ts,css}\"",
-    "dev": "run-scripts dev \"src/**/*.{ts,css}\"",
+    "build": "run-scripts build \"src/**/*.ts\"",
+    "dev": "run-scripts dev \"src/**/*.ts\"",
     "test": "pnpm build && vitest run"
   },
   "peerDependencies": {
@@ -46,7 +39,6 @@
   },
   "dependencies": {
     "@astrojs/prism": "^3.2.0",
-    "@studiocms/markdown-remark-processor": "workspace:*",
     "github-slugger": "^2.0.0",
     "hastscript": "^9.0.0",
     "hast-util-from-html": "^2.0.3",

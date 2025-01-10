@@ -16,6 +16,7 @@ import { rehypeImages } from './rehype-images.js';
 import { rehypePrism } from './rehype-prism.js';
 import { rehypeShiki } from './rehype-shiki.js';
 import { remarkCollectImages } from './remark-collect-images.js';
+import remarkDiscordSubtext from './remark-discord-subtext.js';
 import type {
 	MarkdownProcessor,
 	MarkdownProcessorRenderResult,
@@ -72,6 +73,7 @@ export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {
 			theme: 'obsidian',
 		},
 		autolink: true,
+		discordSubtext: true,
 	},
 };
 
@@ -115,16 +117,19 @@ export async function createMarkdownProcessor(
 	let autolink = true;
 	let calloutsEnabled = true;
 	let calloutsConfig: StudioCMSCalloutOptions = { theme: 'obsidian' };
+	let discordSubtext = true;
 
 	if (typeof studiocms === 'boolean') {
 		autolink = studiocms;
 		calloutsEnabled = studiocms;
+		discordSubtext = studiocms;
 	} else if (typeof studiocms === 'object') {
 		autolink = studiocms.autolink ?? autolink;
 		calloutsEnabled = studiocms.callouts !== false;
 		if (typeof studiocms.callouts === 'object') {
 			calloutsConfig = studiocms.callouts;
 		}
+		discordSubtext = studiocms.discordSubtext ?? discordSubtext;
 	}
 
 	const loadedRemarkPlugins = await Promise.all(loadPlugins(remarkPlugins));
@@ -141,6 +146,11 @@ export async function createMarkdownProcessor(
 	// smartypants
 	if (smartypants) {
 		parser.use(remarkSmartypants);
+	}
+
+	// Discord subtext
+	if (discordSubtext) {
+		parser.use(remarkDiscordSubtext);
 	}
 
 	// User remark plugins

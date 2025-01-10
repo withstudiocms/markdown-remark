@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { createMarkdownProcessor } from '../dist/processor/index.js';
+import { createMarkdownProcessor } from '../dist/index.js';
 
 describe('plugins', () => {
 	it('should be able to get file path when passing fileURL', async () => {

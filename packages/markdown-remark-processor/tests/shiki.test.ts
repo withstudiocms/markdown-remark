@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createMarkdownProcessor, createShikiHighlighter } from '../dist/processor/index.js';
+import { createMarkdownProcessor, createShikiHighlighter } from '../dist/index.js';
 
 describe('shiki syntax highlighting', () => {
 	it('does not add is:raw to the output', async () => {

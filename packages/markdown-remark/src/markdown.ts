@@ -1,11 +1,11 @@
-import type { SSRResult } from 'astro';
-import { renderSlot } from 'astro/runtime/server/index.js';
-import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
 import {
 	HTMLString,
 	type MarkdownProcessorRenderOptions,
 	createMarkdownProcessor,
-} from '#processor';
+} from '@studiocms/markdown-remark-processor';
+import type { SSRResult } from 'astro';
+import { renderSlot } from 'astro/runtime/server/index.js';
+import type { SanitizeOptions } from 'ultrahtml/transformers/sanitize';
 import { importComponentsKeys } from './runtime.js';
 import { TransformToProcessor } from './schema.js';
 import { shared } from './shared.js';
@@ -108,6 +108,7 @@ export const Markdown: (props: Props) => any = Object.assign(
 					const { html } = await render(
 						content,
 						{
+							// @ts-ignore - fileURL is not exposed in the public API
 							fileURL: new URL(import.meta.url),
 						},
 						{ $$result, components },

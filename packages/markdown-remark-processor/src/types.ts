@@ -64,6 +64,7 @@ export interface StudioCMSCalloutOptions {
 export interface StudioCMSConfigOptions {
 	callouts?: StudioCMSCalloutOptions | false;
 	autolink?: boolean;
+	discordSubtext?: boolean;
 }
 
 export interface StudioCMSMarkdownOptions extends AstroMarkdownOptions {
