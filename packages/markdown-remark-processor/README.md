@@ -1,4 +1,4 @@
-# @studiocms/markdown-remark
+# @studiocms/markdown-remark-processor
 
 [![NPM Version](https://img.shields.io/npm/v/@studiocms/markdown-remark?style=for-the-badge&logo=npm)](https://npm.im/@studiocms/markdown-remark)
 [![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=for-the-badge&logo=biome)](https://biomejs.dev/)

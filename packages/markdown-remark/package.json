@@ -29,7 +29,11 @@
       "types": "./dist/schema.d.ts",
       "default": "./dist/schema.js"
     },
-    "./styles/*": "./dist/styles/*"
+    "./styles/*": "./dist/styles/*",
+    "./components": {
+      "types": "./dist/components.d.ts",
+      "default": "./dist/components.js"
+    }
   },
   "files": [
     "dist"
