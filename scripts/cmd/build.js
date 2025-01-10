@@ -53,6 +53,7 @@ export default async function build(...args) {
 	const noClean = args.includes('--no-clean-dist');
 	const noBundle = args.includes('--no-bundle');
 	const forceCJS = args.includes('--cjs');
+	const browser = args.includes('--browser');
 
 	const {
 		type = 'module',
@@ -84,8 +85,11 @@ export default async function build(...args) {
 			external: !noBundle
 				? Object.keys({ ...peerDependencies, ...dependencies, ...imports })
 				: undefined,
+			platform: browser ? 'browser' : 'node',
+			target: browser ? undefined : 'node18',
 			entryPoints,
-			outdir,
+			outdir: browser ? undefined : outdir,
+			outfile: browser ? 'dist/index.js' : undefined,
 			outExtension: forceCJS ? { '.js': '.cjs' } : {},
 			format,
 			plugins: [dtsGen],

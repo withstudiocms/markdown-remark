@@ -8,7 +8,8 @@
     "scripts": {
       "build:--integration": "pnpm --filter @studiocms/markdown-remark build",
       "build:--processor": "pnpm --filter @studiocms/markdown-remark-processor build",
-      "build": "pnpm build:--processor && pnpm build:--integration",
+      "build:--processor-web": "pnpm --filter @studiocms/markdown-remark-processor-web build",
+      "build": "pnpm build:--processor && pnpm build:--processor-web && pnpm build:--integration",
       "dev": "pnpm --stream --filter @studiocms/* --filter @markdown-remark/tests -r -parallel dev",
       "test": "pnpm vitest run --reporter=basic",
       "lint": "biome check .",
