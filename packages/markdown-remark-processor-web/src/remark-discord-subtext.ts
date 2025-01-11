@@ -1,6 +1,8 @@
 import type { Root } from 'mdast';
 import { findAndReplace } from 'mdast-util-find-and-replace';
 
+const discordSubtextRegex = /^-# (.*)/;
+
 /**
  * A remark plugin to transform markdown subtext syntax into HTML.
  *
@@ -12,7 +14,7 @@ import { findAndReplace } from 'mdast-util-find-and-replace';
 export default function remarkDiscordSubtext(): (tree: Root) => void {
 	return (tree: Root) => {
 		findAndReplace(tree, [
-			/^-# (.*)/,
+			discordSubtextRegex,
 			(_, $1) => ({ type: 'html', value: `<small>${$1}</small>` }),
 		]);
 	};
