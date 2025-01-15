@@ -44,12 +44,40 @@ importers:
 
   packages/markdown-remark:
     dependencies:
-      '@astrojs/prism':
-        specifier: ^3.2.0
-        version: 3.2.0
+      '@studiocms/markdown-remark-processor':
+        specifier: workspace:*
+        version: link:../markdown-remark-processor
       astro:
         specifier: ^5.0.0
         version: 5.1.2(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0)
+      pathe:
+        specifier: ^2.0.0
+        version: 2.0.0
+      ultrahtml:
+        specifier: ^1.5.3
+        version: 1.5.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.0.7(@types/node@22.10.5)(yaml@2.7.0)
+    devDependencies:
+      '@inox-tools/astro-tests':
+        specifier: ^0.2.2
+        version: 0.2.2(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0)
+      esbuild:
+        specifier: ^0.24.2
+        version: 0.24.2
+      jest-extended:
+        specifier: ^4.0.2
+        version: 4.0.2
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.8(@types/node@22.10.5)
+
+  packages/markdown-remark-processor:
+    dependencies:
+      '@astrojs/prism':
+        specifier: ^3.2.0
+        version: 3.2.0
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0
@@ -80,6 +108,121 @@ importers:
       mdast-util-definitions:
         specifier: ^6.0.0
         version: 6.0.0
+      mdast-util-find-and-replace:
+        specifier: ^3.0.2
+        version: 3.0.2
+      rehype-autolink-headings:
+        specifier: ^7.1.0
+        version: 7.1.0
+      rehype-raw:
+        specifier: ^7.0.0
+        version: 7.0.0
+      rehype-stringify:
+        specifier: ^10.0.1
+        version: 10.0.1
+      remark-gfm:
+        specifier: ^4.0.0
+        version: 4.0.0
+      remark-parse:
+        specifier: ^11.0.0
+        version: 11.0.0
+      remark-rehype:
+        specifier: ^11.1.1
+        version: 11.1.1
+      remark-smartypants:
+        specifier: ^3.0.2
+        version: 3.0.2
+      shiki:
+        specifier: ^1.23.1
+        version: 1.25.1
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      unist-util-remove-position:
+        specifier: ^5.0.0
+        version: 5.0.0
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
+      unist-util-visit-parents:
+        specifier: ^6.0.1
+        version: 6.0.1
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+    devDependencies:
+      '@inox-tools/astro-tests':
+        specifier: ^0.2.2
+        version: 0.2.2(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0)
+      '@types/estree':
+        specifier: ^1.0.6
+        version: 1.0.6
+      '@types/hast':
+        specifier: ^3.0.4
+        version: 3.0.4
+      '@types/html-escaper':
+        specifier: ^3.0.2
+        version: 3.0.2
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/mdast':
+        specifier: ^4.0.4
+        version: 4.0.4
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
+      esbuild:
+        specifier: ^0.24.2
+        version: 0.24.2
+      jest-extended:
+        specifier: ^4.0.2
+        version: 4.0.2
+      mdast-util-mdx-expression:
+        specifier: ^2.0.1
+        version: 2.0.1
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.8(@types/node@22.10.5)
+
+  packages/markdown-remark-processor-web:
+    dependencies:
+      '@astrojs/prism':
+        specifier: ^3.2.0
+        version: 3.2.0
+      github-slugger:
+        specifier: ^2.0.0
+        version: 2.0.0
+      hast-util-from-html:
+        specifier: ^2.0.3
+        version: 2.0.3
+      hast-util-is-element:
+        specifier: ^3.0.0
+        version: 3.0.0
+      hast-util-to-string:
+        specifier: ^3.0.1
+        version: 3.0.1
+      hast-util-to-text:
+        specifier: ^4.0.2
+        version: 4.0.2
+      hastscript:
+        specifier: ^9.0.0
+        version: 9.0.0
+      html-escaper:
+        specifier: ^3.0.3
+        version: 3.0.3
+      import-meta-resolve:
+        specifier: ^4.1.0
+        version: 4.1.0
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
+      mdast-util-definitions:
+        specifier: ^6.0.0
+        version: 6.0.0
+      mdast-util-find-and-replace:
+        specifier: ^3.0.2
+        version: 3.0.2
       pathe:
         specifier: ^2.0.0
         version: 2.0.0
@@ -107,9 +250,6 @@ importers:
       shiki:
         specifier: ^1.23.1
         version: 1.25.1
-      ultrahtml:
-        specifier: ^1.5.3
-        version: 1.5.3
       unified:
         specifier: ^11.0.5
         version: 11.0.5
@@ -125,13 +265,7 @@ importers:
       vfile:
         specifier: ^6.0.3
         version: 6.0.3
-      vite:
-        specifier: ^6.0.0
-        version: 6.0.7(@types/node@22.10.5)(yaml@2.7.0)
     devDependencies:
-      '@inox-tools/astro-tests':
-        specifier: ^0.2.2
-        version: 0.2.2(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0)
       '@types/estree':
         specifier: ^1.0.6
         version: 1.0.6
@@ -169,8 +303,8 @@ importers:
         specifier: workspace:*
         version: link:../../..
       astro:
-        specifier: ^5.1.3
-        version: 5.1.3(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0)
+        specifier: ^5.1.4
+        version: 5.1.4(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0)
 
   scripts:
     dependencies:
@@ -1184,6 +1318,11 @@ packages:
     engines: {node: ^18.17.1 || ^20.3.0 || >=22.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
+  astro@5.1.4:
+    resolution: {integrity: sha512-V0XD2GlwUweCROYv+QKs97p7I1cZ6mYycU3VKGbJv2l55suTTy766F/MtHgoM/VAFdPBn488MUvDAYx85gf/Zw==}
+    engines: {node: ^18.17.1 || ^20.3.0 || >=22.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
+    hasBin: true
+
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
@@ -1771,8 +1910,8 @@ packages:
   mdast-util-definitions@6.0.0:
     resolution: {integrity: sha512-scTllyX6pnYNZH/AIp/0ePz6s4cZtARxImwoPJ7kS42n+MnVsI4XbnG6d4ibehRIldYMWM2LD7ImQblVhUejVQ==}
 
-  mdast-util-find-and-replace@3.0.1:
-    resolution: {integrity: sha512-SG21kZHGC3XRTSUhtofZkBzZTJNM5ecCi0SK2IMKmSXR8vO3peL+kb1O0z7Zl83jKtutG4k5Wv/W7V3/YHvzPA==}
+  mdast-util-find-and-replace@3.0.2:
+    resolution: {integrity: sha512-Tmd1Vg/m3Xz43afeNxDIhWRtFZgM2VLyaf4vSTYwudTyeuTneoL3qtWMA5jeLyz/O1vDJmmV4QuScFCA2tBPwg==}
 
   mdast-util-from-markdown@2.0.2:
     resolution: {integrity: sha512-uZhTV/8NBuw0WHkPTrCqDOl0zVe1BIng5ZtHoDk49ME1qqcjYmmLmOf0gELgcRMxN4w2iuIeVso5/6QymSrgmA==}
@@ -4039,6 +4178,103 @@ snapshots:
       - uploadthing
       - yaml
 
+  astro@5.1.4(@types/node@22.10.5)(rollup@4.29.1)(typescript@5.7.2)(yaml@2.7.0):
+    dependencies:
+      '@astrojs/compiler': 2.10.3
+      '@astrojs/internal-helpers': 0.4.2
+      '@astrojs/markdown-remark': 6.0.1
+      '@astrojs/telemetry': 3.2.0
+      '@oslojs/encoding': 1.1.0
+      '@rollup/pluginutils': 5.1.4(rollup@4.29.1)
+      '@types/cookie': 0.6.0
+      acorn: 8.14.0
+      aria-query: 5.3.2
+      axobject-query: 4.1.0
+      boxen: 8.0.1
+      ci-info: 4.1.0
+      clsx: 2.1.1
+      common-ancestor-path: 1.0.1
+      cookie: 0.7.2
+      cssesc: 3.0.0
+      debug: 4.4.0
+      deterministic-object-hash: 2.0.2
+      devalue: 5.1.1
+      diff: 5.2.0
+      dlv: 1.1.3
+      dset: 3.1.4
+      es-module-lexer: 1.6.0
+      esbuild: 0.21.5
+      estree-walker: 3.0.3
+      fast-glob: 3.3.3
+      flattie: 1.1.1
+      github-slugger: 2.0.0
+      html-escaper: 3.0.3
+      http-cache-semantics: 4.1.1
+      js-yaml: 4.1.0
+      kleur: 4.1.5
+      magic-string: 0.30.17
+      magicast: 0.3.5
+      micromatch: 4.0.8
+      mrmime: 2.0.0
+      neotraverse: 0.6.18
+      p-limit: 6.2.0
+      p-queue: 8.0.1
+      preferred-pm: 4.0.0
+      prompts: 2.4.2
+      rehype: 13.0.2
+      semver: 7.6.3
+      shiki: 1.25.1
+      tinyexec: 0.3.2
+      tsconfck: 3.1.4(typescript@5.7.2)
+      ultrahtml: 1.5.3
+      unist-util-visit: 5.0.0
+      unstorage: 1.14.4
+      vfile: 6.0.3
+      vite: 6.0.7(@types/node@22.10.5)(yaml@2.7.0)
+      vitefu: 1.0.5(vite@6.0.7(@types/node@22.10.5)(yaml@2.7.0))
+      which-pm: 3.0.0
+      xxhash-wasm: 1.1.0
+      yargs-parser: 21.1.1
+      yocto-spinner: 0.1.2
+      zod: 3.23.8
+      zod-to-json-schema: 3.24.1(zod@3.23.8)
+      zod-to-ts: 1.2.0(typescript@5.7.2)(zod@3.23.8)
+    optionalDependencies:
+      sharp: 0.33.5
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@types/node'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - db0
+      - idb-keyval
+      - ioredis
+      - jiti
+      - less
+      - lightningcss
+      - rollup
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - typescript
+      - uploadthing
+      - yaml
+
   axobject-query@4.1.0: {}
 
   bail@2.0.2: {}
@@ -4663,7 +4899,7 @@ snapshots:
       '@types/unist': 3.0.3
       unist-util-visit: 5.0.0
 
-  mdast-util-find-and-replace@3.0.1:
+  mdast-util-find-and-replace@3.0.2:
     dependencies:
       '@types/mdast': 4.0.4
       escape-string-regexp: 5.0.0
@@ -4692,7 +4928,7 @@ snapshots:
       '@types/mdast': 4.0.4
       ccount: 2.0.1
       devlop: 1.1.0
-      mdast-util-find-and-replace: 3.0.1
+      mdast-util-find-and-replace: 3.0.2
       micromark-util-character: 2.1.1
 
   mdast-util-gfm-footnote@2.0.0:

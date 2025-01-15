@@ -1,5 +1,5 @@
+import type { StudioCMSConfigOptions } from '@studiocms/markdown-remark-processor';
 import { z } from 'astro/zod';
-import type { StudioCMSConfigOptions } from '../processor/types.js';
 
 export const StudioCMSSanitizeOptionsSchema = z
 	.object({

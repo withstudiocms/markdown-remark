@@ -114,40 +114,14 @@ const { html } = render('# Hello World! <custom></custom>', {}, { $$result, {cus
 </html>
 ```
 
-### Using the markdown processor directly
-
-**`src/utils/render.ts`**
-
-```ts
-import { type MarkdownProcessorRenderOptions, createMarkdownProcessor } from '@studiocms/markdown-remark';
-
-const processor = await createMarkdownProcessor({
-	/* 
-    * Your Options here 
-    * same as https://docs.astro.build/en/reference/configuration-reference/#markdown-options
-    */
-});
-
-export async function render(
-	content: string,
-	options?: MarkdownProcessorRenderOptions
-) {
-	const result = await processor.render(content, options);
-
-	return {
-		html: result.astroHTML,
-		meta: result.metadata,
-	};
-}
-```
+### Using the Markdown component directly without the integration
 
 **`src/pages/index.astro`**
 
 ```astro
 ---
-import { render } from '../utils/render';
-
-const content = await render("# Hello World!")
+import { Markdown } from '@studiocms/markdown-remark/components';
+import H1 from '../components/H1.astro';
 ---
 <html>
     <head>
@@ -156,7 +130,7 @@ const content = await render("# Hello World!")
         <title>Example</title>
     </head>
     <body>
-        {content.html}
+        <Markdown content={`# Hello world!`} components={{ h1: H1 }} />
     </body>
 </html>
 ```

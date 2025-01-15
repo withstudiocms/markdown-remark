@@ -16,6 +16,7 @@ import { rehypeImages } from './rehype-images.js';
 import { rehypePrism } from './rehype-prism.js';
 import { rehypeShiki } from './rehype-shiki.js';
 import { remarkCollectImages } from './remark-collect-images.js';
+import remarkDiscordSubtext from './remark-discord-subtext.js';
 import type {
 	MarkdownProcessor,
 	MarkdownProcessorRenderResult,
@@ -72,6 +73,7 @@ export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {
 			theme: 'obsidian',
 		},
 		autolink: true,
+		discordSubtext: true,
 	},
 };
 
@@ -101,51 +103,70 @@ export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {
 export async function createMarkdownProcessor(
 	opts?: StudioCMSMarkdownOptions
 ): Promise<MarkdownProcessor> {
-	const {
-		syntaxHighlight = markdownConfigDefaults.syntaxHighlight,
-		shikiConfig = markdownConfigDefaults.shikiConfig,
-		remarkPlugins = markdownConfigDefaults.remarkPlugins,
-		rehypePlugins = markdownConfigDefaults.rehypePlugins,
-		remarkRehype: remarkRehypeOptions = markdownConfigDefaults.remarkRehype,
-		gfm = markdownConfigDefaults.gfm,
-		smartypants = markdownConfigDefaults.smartypants,
-		studiocms = markdownConfigDefaults.studiocms,
-	} = opts ?? {};
+	// const {
+	// 	syntaxHighlight = markdownConfigDefaults.syntaxHighlight,
+	// 	shikiConfig = markdownConfigDefaults.shikiConfig,
+	// 	remarkPlugins = markdownConfigDefaults.remarkPlugins,
+	// 	rehypePlugins = markdownConfigDefaults.rehypePlugins,
+	// 	remarkRehype: remarkRehypeOptions = markdownConfigDefaults.remarkRehype,
+	// 	gfm = markdownConfigDefaults.gfm,
+	// 	smartypants = markdownConfigDefaults.smartypants,
+	// 	studiocms = markdownConfigDefaults.studiocms,
+	// } = opts ?? {};
+
+	const options = {
+		syntaxHighlight: opts?.syntaxHighlight ?? markdownConfigDefaults.syntaxHighlight,
+		shikiConfig: opts?.shikiConfig ?? markdownConfigDefaults.shikiConfig,
+		remarkPlugins: opts?.remarkPlugins ?? markdownConfigDefaults.remarkPlugins,
+		rehypePlugins: opts?.rehypePlugins ?? markdownConfigDefaults.rehypePlugins,
+		remarkRehype: opts?.remarkRehype ?? markdownConfigDefaults.remarkRehype,
+		gfm: opts?.gfm ?? markdownConfigDefaults.gfm,
+		smartypants: opts?.smartypants ?? markdownConfigDefaults.smartypants,
+		studiocms: opts?.studiocms ?? markdownConfigDefaults.studiocms,
+	};
 
 	let autolink = true;
 	let calloutsEnabled = true;
 	let calloutsConfig: StudioCMSCalloutOptions = { theme: 'obsidian' };
+	let discordSubtext = true;
 
-	if (typeof studiocms === 'boolean') {
-		autolink = studiocms;
-		calloutsEnabled = studiocms;
-	} else if (typeof studiocms === 'object') {
-		autolink = studiocms.autolink ?? autolink;
-		calloutsEnabled = studiocms.callouts !== false;
-		if (typeof studiocms.callouts === 'object') {
-			calloutsConfig = studiocms.callouts;
+	if (typeof options.studiocms === 'boolean') {
+		autolink = options.studiocms;
+		calloutsEnabled = options.studiocms;
+		discordSubtext = options.studiocms;
+	} else if (typeof options.studiocms === 'object') {
+		autolink = options.studiocms.autolink ?? autolink;
+		calloutsEnabled = options.studiocms.callouts !== false;
+		if (typeof options.studiocms.callouts === 'object') {
+			calloutsConfig = options.studiocms.callouts;
 		}
+		discordSubtext = options.studiocms.discordSubtext ?? discordSubtext;
 	}
 
-	const loadedRemarkPlugins = await Promise.all(loadPlugins(remarkPlugins));
-	const loadedRehypePlugins = await Promise.all(loadPlugins(rehypePlugins));
+	const loadedRemarkPlugins = await Promise.all(loadPlugins(options.remarkPlugins));
+	const loadedRehypePlugins = await Promise.all(loadPlugins(options.rehypePlugins));
 
 	// Initialize the parser
 	const parser = unified().use(remarkParse);
 
 	// gfm
-	if (gfm) {
+	if (options.gfm) {
 		parser.use(remarkGfm);
 	}
 
 	// smartypants
-	if (smartypants) {
+	if (options.smartypants) {
 		parser.use(remarkSmartypants);
 	}
 
+	// Discord subtext
+	if (discordSubtext) {
+		parser.use(remarkDiscordSubtext);
+	}
+
 	// User remark plugins
-	for (const [plugin, pluginOpts] of loadedRemarkPlugins) {
-		parser.use(plugin, pluginOpts);
+	for (const loadedRemark of loadedRemarkPlugins) {
+		parser.use(loadedRemark[0], loadedRemark[1]);
 	}
 
 	// Apply later in case user plugins resolve relative image paths
@@ -155,19 +176,19 @@ export async function createMarkdownProcessor(
 	parser.use(remarkRehype, {
 		allowDangerousHtml: true,
 		passThrough: [],
-		...remarkRehypeOptions,
+		...options.remarkRehype,
 	});
 
 	// Syntax highlighting
-	if (syntaxHighlight === 'shiki') {
-		parser.use(rehypeShiki, shikiConfig);
-	} else if (syntaxHighlight === 'prism') {
+	if (options.syntaxHighlight === 'shiki') {
+		parser.use(rehypeShiki, options.shikiConfig);
+	} else if (options.syntaxHighlight === 'prism') {
 		parser.use(rehypePrism);
 	}
 
 	// User rehype plugins
-	for (const [plugin, pluginOpts] of loadedRehypePlugins) {
-		parser.use(plugin, pluginOpts);
+	for (const loadedRehype of loadedRehypePlugins) {
+		parser.use(loadedRehype[0], loadedRehype[1]);
 	}
 
 	// Images / Assets support
