@@ -1,5 +1,26 @@
 # @studiocms/markdown-remark
 
+## 1.0.0
+
+### Major Changes
+
+- [#15](https://github.com/withstudiocms/markdown-remark/pull/15) [`ab0142b`](https://github.com/withstudiocms/markdown-remark/commit/ab0142bc28ba51de5884c0f6ee0d655400532009) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - First Major Release
+
+  Package has been divided into multiple smaller packages:
+
+  - `@studiocms/markdown-remark`: The Primary Astro integration that includes the underlying processor as well as custom functionality to allow custom markdown rendering pipelines.
+  - `@studiocms/markdown-remark-processor`: The Main markdown processor for `@studiocms/markdown-remark`.
+  - `@studiocms/markdown-remark-processor-web`: A Client side browser-first version of our main processor.
+
+### Minor Changes
+
+- [#15](https://github.com/withstudiocms/markdown-remark/pull/15) [`ab0142b`](https://github.com/withstudiocms/markdown-remark/commit/ab0142bc28ba51de5884c0f6ee0d655400532009) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - Add support for Discord subtext `-#` syntax using custom remark plugin
+
+### Patch Changes
+
+- Updated dependencies [[`ab0142b`](https://github.com/withstudiocms/markdown-remark/commit/ab0142bc28ba51de5884c0f6ee0d655400532009), [`ab0142b`](https://github.com/withstudiocms/markdown-remark/commit/ab0142bc28ba51de5884c0f6ee0d655400532009)]:
+  - @studiocms/markdown-remark-processor@1.0.0
+
 ## 0.3.1
 
 ### Patch Changes
