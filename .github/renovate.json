@@ -5,7 +5,7 @@
     "schedule:earlyMondays",
     ":preserveSemverRanges",
     "group:allNonMajor",
-    ":disablePeerDependencies", 
+    ":disablePeerDependencies",
     "customManagers:biomeVersions"
   ],
   "dependencyDashboard": true,
