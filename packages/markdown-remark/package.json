@@ -54,10 +54,7 @@
     "ultrahtml": "^1.5.3"
   },
   "devDependencies": {
-    "@inox-tools/astro-tests": "^0.2.2",
-    "esbuild": "^0.24.2",
-    "jest-extended": "^4.0.2",
-    "vitest": "^2.1.8"
+    "@inox-tools/astro-tests": "^0.2.2"
   },
   "publishConfig": {
     "provenance": true
