@@ -1,9 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:best-practices",
+    "config:recommended",
     "schedule:earlyMondays",
     ":preserveSemverRanges",
+    "group:allNonMajor",
+    ":disablePeerDependencies", 
     "customManagers:biomeVersions"
   ],
   "dependencyDashboard": true,
@@ -16,10 +18,6 @@
   "rangeStrategy": "bump",
   "updatePinnedDependencies": false,
   "packageRules": [
-    {
-      "matchDepTypes": ["peerDependencies"],
-      "enabled": false
-    },
     {
       "matchDepTypes": ["packageManager", "engines"],
       "enabled": false
