@@ -90,6 +90,7 @@ jobs:
       - uses: marocchino/sticky-pull-request-comment@v2
         if: steps.preview-step.outputs.deployment-action == 'deploy' && env.deployment_status == 'success'
         with:
+          GITHUB_TOKEN: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
           header: pr-preview
           message: |
             PR Test Results
@@ -98,6 +99,7 @@ jobs:
       - uses: marocchino/sticky-pull-request-comment@v2
         if: steps.preview-step.outputs.deployment-action == 'remove' && env.deployment_status == 'success'
         with:
+          GITHUB_TOKEN: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
           header: pr-preview
           message: |
             PR Test Results
