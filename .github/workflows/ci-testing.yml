@@ -79,6 +79,7 @@ jobs:
       # If the push is to a PR, deploy the test results to GitHub Pages under /pr-preview folder
       - name: Deploy PR Test Results to GitHub Pages
         uses: rossjrw/pr-preview-action@v1
+        id: preview-step
         with:
           token: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
           source-dir: vitest-report
