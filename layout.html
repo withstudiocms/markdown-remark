@@ -1,0 +1,212 @@
+---
+---
+
+<head>
+    <title>Create StudioCMS Test Reports</title>
+</head>
+
+<body>
+    <div class="header">
+        <svg width="48" height="48" viewBox="0 0 755 792" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="295" width="460" height="466" rx="32" fill="white" />
+            <path
+                d="M272 434V166H180C162.327 166 148 180.327 148 198V597C148 614.673 162.327 629 180 629H577.5C595.173 629 609.5 614.673 609.5 597V490H328C297.072 490 272 464.928 272 434Z"
+                fill="white" />
+            <path
+                d="M124 597V329H32C14.3269 329 0 343.327 0 361V760C0 777.673 14.3269 792 32 792H429.5C447.173 792 461.5 777.673 461.5 760V653H180C149.072 653 124 627.928 124 597Z"
+                fill="white" />
+        </svg>
+        <h1>Test Reports</h1>
+    </div>
+    <ul></ul>
+
+    <style>
+        body {
+            background: #151515;
+            margin: 0;
+            font-family: Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%
+        }
+
+        * {
+            color: #fff;
+            text-decoration: none
+        }
+
+        .header {
+            display: flex;
+
+            align-items: center;
+            gap: 1rem;
+
+            background: #7c45f0;
+            font-size: 1.3125rem;
+            font-weight: 500;
+            padding-left: 1rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+            margin: 0
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.3125rem;
+            font-weight: 500;
+        }
+
+        h1+ul {
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden
+        }
+
+        .folder>a:nth-child(1) {
+            height: 15px;
+            display: inline-block
+        }
+
+        .folder>a:nth-child(1):hover {
+            text-decoration: underline;
+            text-decoration-color: #aa87f4
+        }
+
+        .file {
+            position: relative;
+            height: 50px
+        }
+
+        .file a {
+            position: absolute;
+            display: inline-block;
+            height: calc(100% - 20px);
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 30px;
+            padding: 0 10px;
+            padding-top: 4px;
+            margin: 10px 0;
+            transition: background-color .5s ease;
+            color: #aa87f4
+        }
+
+        .file:hover a {
+            background-color: rgba(255, 255, 255, .1)
+        }
+
+        ul,
+        ul.tree ul {
+            list-style: none;
+            margin: 0;
+            padding: 0
+        }
+
+        li {
+            display: block
+        }
+
+        ul ul {
+            margin-left: 10px
+        }
+
+        ul li {
+            margin: 0;
+            padding: 0 20px;
+            color: #369;
+            border-left: 1px solid #aa87f4
+        }
+
+        ul li:last-child {
+            border-left: none
+        }
+
+        ul li:before {
+            position: relative;
+            height: 28px;
+            width: 20px;
+            color: #fff;
+            border-bottom: 1px solid #aa87f4;
+            content: "";
+            display: inline-block;
+            left: -20px
+        }
+
+        ul li:last-child:before {
+            border-left: 1px solid #aa87f4;
+        }
+    </style>
+
+    <script>
+        // Get the first <ul> element on the page
+        var c = document.getElementsByTagName("ul")[0];
+
+        // Utility function to escape HTML special characters
+        function escapeHtml(e) {
+            return e
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Generate an array of file paths dynamically (server-side templating via Liquid syntax)
+        var files = [
+            {% for url in site.static_files %}
+        {% if url.path contains '/index.html' %}
+        '{{ url.path | replace: "'", "\\'" }}',
+            {% endif %}
+        {% endfor %}
+    ];
+
+        // Iterate through the list of file paths
+        for (var i = 0; i < files.length; i++) {
+            var filePath = files[i];
+            var urlParts = filePath.split("/").slice(1); // Split file path into parts and skip the first empty entry
+
+            console.group(filePath); // Start a console group for this file path
+
+            // Build the folder structure in the <ul> element
+            var parent = null;
+            for (var x = 0; x < urlParts.length; x++) {
+                var part = urlParts[x];
+                if (part) {
+                    var el = document.querySelector(`[ref="${x}-${part}"]`); // Check if the element already exists
+
+                    // If the element doesn't exist, create it
+                    if (!el) {
+                        var type = part.includes(".") ? "file" : "folder"; // Determine if it's a file or folder
+                        el = document.createElement("li");
+                        var a = document.createElement("a");
+
+                        a.innerHTML = escapeHtml(part); // Escape the file/folder name
+                        a.href = urlParts.slice(0, x + 1).join("/"); // Construct the link
+                        el.appendChild(a);
+
+                        el.setAttribute("ref", `${x}-${part}`);
+                        el.setAttribute("level", x);
+                        el.setAttribute("class", type);
+
+                        // Append the element to the parent or the main <ul>
+                        parent ? parent.appendChild(el) : c.appendChild(el);
+                    }
+
+                    // Update the parent to the current element
+                    parent = el;
+                }
+            }
+
+            console.groupEnd(filePath); // End the console group for this file path
+        }
+
+        // Update the document title to include the number of items
+        document.title = document.querySelector("h1").innerHTML += ` (${files.length} items)`;
+    </script>
+
+</body>
