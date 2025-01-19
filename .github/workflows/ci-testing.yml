@@ -94,7 +94,7 @@ jobs:
           header: pr-preview
           message: |
             # PR Test Results
-            :rocket: View preview at ${{ steps.preview-step.outputs.preview-url }}
+            :rocket: View results at ${{ steps.preview-step.outputs.preview-url }}
 
       - uses: marocchino/sticky-pull-request-comment@v2
         if: steps.preview-step.outputs.deployment-action == 'remove' && env.deployment_status == 'success'
@@ -103,5 +103,5 @@ jobs:
           header: pr-preview
           message: |
             # PR Test Results
-            Preview removed because the pull request was closed.
+            Results removed because the pull request was closed.
             ${{ steps.preview-step.outputs.action-start-time }}
