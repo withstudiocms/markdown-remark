@@ -84,4 +84,21 @@ jobs:
           source-dir: vitest-report
           umbrella-dir: pr-preview/vitest/
           preview-branch: test-results
-          comment: true
+          comment: false
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: steps.preview-step.outputs.deployment-action == 'deploy' && env.deployment_status == 'success'
+        with:
+          header: pr-preview
+          message: |
+            PR Test Results
+            :rocket: View preview at ${{ steps.preview-step.outputs.preview-url }}
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: steps.preview-step.outputs.deployment-action == 'remove' && env.deployment_status == 'success'
+        with:
+          header: pr-preview
+          message: |
+            PR Test Results
+            Preview removed because the pull request was closed.
+            ${{ steps.preview-step.outputs.action-start-time }}
