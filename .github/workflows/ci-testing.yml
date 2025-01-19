@@ -5,12 +5,12 @@ on:
   push:
     paths:
       - 'packages/**'
-      - 'vitest.workspace.ts'
+      - 'vitest.config.mts'
     branches: [main]
   pull_request:
     paths:
       - 'packages/**'
-      - 'vitest.workspace.ts'
+      - 'vitest.config.mts'
     types:
       - opened
       - reopened
