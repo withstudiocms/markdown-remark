@@ -94,7 +94,7 @@ jobs:
           header: pr-preview
           message: |
             # PR Test Results
-            :rocket: View results at ${{ steps.preview-step.outputs.preview-url }}
+            Vitest Test Results: ${{ steps.preview-step.outputs.preview-url }}
 
       - uses: marocchino/sticky-pull-request-comment@v2
         if: steps.preview-step.outputs.deployment-action == 'remove' && env.deployment_status == 'success'
