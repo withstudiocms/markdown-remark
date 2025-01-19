@@ -93,7 +93,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
           header: pr-preview
           message: |
-            PR Test Results
+            # PR Test Results
             :rocket: View preview at ${{ steps.preview-step.outputs.preview-url }}
 
       - uses: marocchino/sticky-pull-request-comment@v2
@@ -102,6 +102,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
           header: pr-preview
           message: |
-            PR Test Results
+            # PR Test Results
             Preview removed because the pull request was closed.
             ${{ steps.preview-step.outputs.action-start-time }}
