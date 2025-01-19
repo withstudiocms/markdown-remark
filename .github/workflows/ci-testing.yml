@@ -22,17 +22,68 @@ permissions:
 concurrency: testing-${{ github.ref }}
 
 jobs:
-    test:
-      name: Vitest Test
-      runs-on: ubuntu-latest
-      env:
-        NODE_OPTIONS: "--max_old_space_size=4096"
-      steps:
-        - name: Check out code using Git
-          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+  run-tests:
+    name: Vitest Test
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: "--max_old_space_size=4096"
+    steps:
+      - name: Check out code using Git
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
   
-        - name: Install Tools & Dependencies
-          uses: withstudiocms/automations/.github/actions/install@main
+      - name: Install Tools & Dependencies
+        uses: withstudiocms/automations/.github/actions/install@main
+
+      - name: Build Packages
+        run: pnpm ci:build
   
-        - name: Build and Test Packages
-          run: pnpm ci:test
+      - name: Test Packages
+        run: pnpm ci:test
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-report
+          path: html
+          retention-days: 14
+    
+  publish-tests:
+    name: Publish Test Results
+    if: ${{ !cancelled() }}
+    needs: [run-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code using Git
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      
+      - name: Install Tools & Dependencies
+        uses: withstudiocms/automations/.github/actions/install@main
+
+      - name: Download HTML report from GitHub Actions Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: vitest-report
+          path: vitest-report
+
+      # If the push is to the main branch, deploy the test results to GitHub Pages under /vitest folder
+      - name: Deploy Test Results to GitHub Pages
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
+          folder: vitest-report
+          target-folder: vitest
+          force: false
+          clean-exclude: |
+            pr-preview/
+            index.html
+          branch: test-results
+
+      # If the push is to a PR, deploy the test results to GitHub Pages under /pr-preview folder
+      - name: Deploy PR Test Results to GitHub Pages
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          token: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
+          source-dir: vitest-report
+          umbrella-dir: pr-preview/vitest/
+          preview-branch: test-results
