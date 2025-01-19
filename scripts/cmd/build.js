@@ -149,8 +149,6 @@ async function getDefinedEntries() {
 	const define = {
 		/** The current version (at the time of building) for the current package, such as `astro` or `@astrojs/sitemap` */
 		PACKAGE_VERSION: await getInternalPackageVersion('./package.json'),
-		/** The current version (at the time of building) for `@astrojs/check` */
-		ASTRO_CHECK_VERSION: await getWorkspacePackageVersion('@astrojs/check'),
 		/** The current version (at the time of building) for `typescript` */
 		TYPESCRIPT_VERSION: await getWorkspacePackageVersion('typescript'),
 	};
