@@ -199,7 +199,7 @@
                             var a = document.createElement("a");
     
                             a.innerHTML = escapeHtml(part); // Escape the file/folder name
-                            a.href = urlParts.slice(0, x + 1).join("/"); // Construct the link
+                            a.href = urlParts.slice(0, x + 1).join("/").replace("/index.html", "/"); // Construct the link
                             el.appendChild(a);
                         }
 
