@@ -71,9 +71,7 @@ jobs:
           folder: vitest-report
           target-folder: vitest
           force: false
-          clean-exclude: |
-            pr-preview/
-            index.html
+          clean: false
           branch: test-results
 
       # If the push is to a PR, deploy the test results to GitHub Pages under /pr-preview folder
