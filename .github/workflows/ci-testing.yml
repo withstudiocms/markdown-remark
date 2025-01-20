@@ -64,7 +64,7 @@ jobs:
 
       # If the push is to the main branch, deploy the test results to GitHub Pages under /vitest folder
       - name: Deploy Test Results to GitHub Pages
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.STUDIOCMS_SERVICE_TOKEN }}
