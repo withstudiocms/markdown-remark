@@ -187,11 +187,21 @@
                     if (!el) {
                         var type = part.includes(".") ? "file" : "folder"; // Determine if it's a file or folder
                         el = document.createElement("li");
-                        var a = document.createElement("a");
 
-                        a.innerHTML = escapeHtml(part); // Escape the file/folder name
-                        a.href = type === "folder" ? '#' : urlParts.slice(0, x + 1).join("/"); // Construct the link
-                        el.appendChild(a);
+                        if (type === "folder") {
+                            var span = document.createElement("span");
+
+                            span.innerHTML = escapeHTML(part);
+                            el.appendChild(span)
+                        }
+
+                        if (type === "file") {
+                            var a = document.createElement("a");
+    
+                            a.innerHTML = escapeHtml(part); // Escape the file/folder name
+                            a.href = urlParts.slice(0, x + 1).join("/"); // Construct the link
+                            el.appendChild(a);
+                        }
 
                         el.setAttribute("ref", `${x}-${part}`);
                         el.setAttribute("level", x);
