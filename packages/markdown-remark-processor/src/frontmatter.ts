@@ -1,4 +1,5 @@
 import yaml from 'js-yaml';
+import * as toml from 'smol-toml';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function isFrontmatterValid(frontmatter: Record<string, any>): boolean {
@@ -11,13 +12,18 @@ export function isFrontmatterValid(frontmatter: Record<string, any>): boolean {
 	return typeof frontmatter === 'object' && frontmatter !== null;
 }
 
-// Capture frontmatter wrapped with `---`, including any characters and new lines within it.
-// Only capture if `---` exists near the top of the file, including:
+// Capture frontmatter wrapped with `---` or `+++`, including any characters and new lines within it.
+// Only capture if `---` or `+++` exists near the top of the file, including:
 // 1. Start of file (including if has BOM encoding)
 // 2. Start of file with any whitespace (but `---` must still start on a new line)
-const frontmatterRE = /(?:^\uFEFF?|^\s*\n)---([\s\S]*?\n)---/;
+const frontmatterRE = /(?:^\uFEFF?|^\s*\n)(?:---|\+\+\+)([\s\S]*?\n)(?:---|\+\+\+)/;
+const frontmatterTypeRE = /(?:^\uFEFF?|^\s*\n)(---|\+\+\+)/;
 export function extractFrontmatter(code: string): string | undefined {
 	return frontmatterRE.exec(code)?.[1];
+}
+
+function getFrontmatterParser(code: string): [string, (str: string) => unknown] {
+	return frontmatterTypeRE.exec(code)?.[1] === '+++' ? ['+++', toml.parse] : ['---', yaml.load];
 }
 
 export interface ParseFrontmatterOptions {
@@ -69,7 +75,8 @@ export function parseFrontmatter(
 		return { frontmatter: {}, rawFrontmatter: '', content: code };
 	}
 
-	const parsed = yaml.load(rawFrontmatter);
+	const [delims, parser] = getFrontmatterParser(code);
+	const parsed = parser(rawFrontmatter);
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const frontmatter = (parsed && typeof parsed === 'object' ? parsed : {}) as Record<string, any>;
 
@@ -79,16 +86,19 @@ export function parseFrontmatter(
 			content = code;
 			break;
 		case 'remove':
-			content = code.replace(`---${rawFrontmatter}---`, '');
+			content = code.replace(`${delims}${rawFrontmatter}${delims}`, '');
 			break;
 		case 'empty-with-spaces':
 			content = code.replace(
-				`---${rawFrontmatter}---`,
+				`${delims}${rawFrontmatter}${delims}`,
 				`   ${rawFrontmatter.replace(/[^\r\n]/g, ' ')}   `
 			);
 			break;
 		case 'empty-with-lines':
-			content = code.replace(`---${rawFrontmatter}---`, rawFrontmatter.replace(/[^\r\n]/g, ''));
+			content = code.replace(
+				`${delims}${rawFrontmatter}${delims}`,
+				rawFrontmatter.replace(/[^\r\n]/g, '')
+			);
 			break;
 	}
 
