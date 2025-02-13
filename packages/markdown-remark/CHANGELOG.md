@@ -1,5 +1,12 @@
 # @studiocms/markdown-remark
 
+## 1.1.0
+
+### Patch Changes
+
+- Updated dependencies [[`6a05fec`](https://github.com/withstudiocms/markdown-remark/commit/6a05fecf27c68f57168cf522a9cec178d71a9f7c)]:
+  - @studiocms/markdown-remark-processor@1.1.0
+
 ## 1.0.0
 
 ### Major Changes
