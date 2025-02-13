@@ -27,8 +27,8 @@ importers:
         specifier: 3.0.5
         version: 3.0.5(vitest@3.0.5)
       esbuild:
-        specifier: ^0.24.2
-        version: 0.24.2
+        specifier: ^0.25.0
+        version: 0.25.0
       jest-extended:
         specifier: ^4.0.2
         version: 4.0.2
