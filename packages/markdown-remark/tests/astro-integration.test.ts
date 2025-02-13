@@ -2,7 +2,7 @@ import { loadFixture } from '@inox-tools/astro-tests/astroFixture';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 const fixture = await loadFixture({
-	root: './fixture/astro',
+	root: './fixture/astro/',
 });
 
 describe('Markdown-Remark Astro Integration Tests', () => {
