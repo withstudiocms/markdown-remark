@@ -54,7 +54,7 @@
     "ultrahtml": "^1.5.3"
   },
   "devDependencies": {
-    "@inox-tools/astro-tests": "0.2.0"
+    "@inox-tools/astro-tests": "0.2.2"
   },
   "publishConfig": {
     "provenance": true
