@@ -100,7 +100,7 @@ import { render } from 'studiocms:markdown-remark';
 import Custom from '../components/Custom.astro';
 
 // @ts-ignore
-const { html } = render('# Hello World! <custom></custom>', {}, { $$result, {custom: Custom} })
+const { html } = await render('# Hello World! <custom></custom>', {}, { $$result, {custom: Custom} })
 ---
 <html>
     <head>
