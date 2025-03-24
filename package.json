@@ -6,6 +6,7 @@
     "node": "20.14.0"
   },
   "scripts": {
+    "knip": "knip",
     "build:--integration": "pnpm --filter @studiocms/markdown-remark build",
     "build:--processor": "pnpm --filter @studiocms/markdown-remark-processor build",
     "build:--processor-web": "pnpm --filter @studiocms/markdown-remark-processor-web build",
@@ -29,8 +30,8 @@
     "@changesets/config": "^3.0.5",
     "@types/node": "^22.10.7",
     "@vitest/ui": "3.0.5",
-    "esbuild": "^0.25.0",
     "jest-extended": "^4.0.2",
+    "knip": "^5.46.0",
     "pkg-pr-new": "^0.0.39",
     "run-scripts": "workspace:*",
     "typescript": "^5.7.3",
