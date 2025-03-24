@@ -60,7 +60,7 @@ export const rehypeShiki: Plugin<[ShikiConfig, string[]?], Root> = (config, excl
 					transformers: config?.transformers,
 				});
 			},
-			excludeLangs,
+			excludeLangs
 		);
 	};
 };

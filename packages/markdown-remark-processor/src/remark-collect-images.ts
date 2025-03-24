@@ -1,15 +1,15 @@
+import { isRemoteAllowed } from '@astrojs/internal-helpers/remote';
 import type { Root } from 'mdast';
 import { definitions } from 'mdast-util-definitions';
 import { visit } from 'unist-util-visit';
 import type { VFile } from 'vfile';
-import { isRemoteAllowed } from '@astrojs/internal-helpers/remote';
 import type { StudioCMSMarkdownProcessorOptions } from './types.js';
 
 export function remarkCollectImages(opts: StudioCMSMarkdownProcessorOptions['image']) {
 	const domains = opts?.domains ?? [];
 	const remotePatterns = opts?.remotePatterns ?? [];
 
-	return function (tree: Root, vfile: VFile) {
+	return (tree: Root, vfile: VFile) => {
 		if (typeof vfile?.path !== 'string') return;
 
 		const definition = definitions(tree);

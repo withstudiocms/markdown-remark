@@ -2,12 +2,7 @@
   "$schema": "../node_modules/@changesets/config/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "withstudiocms/markdown-remark" }],
   "commit": false,
-  "fixed": [
-    [
-      "@studiocms/markdown-remark",
-      "@studiocms/markdown-remark-processor"
-    ]
-  ],
+  "fixed": [["@studiocms/markdown-remark", "@studiocms/markdown-remark-processor"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",

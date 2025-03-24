@@ -9,6 +9,7 @@ import { unified } from 'unified';
 import { VFile } from 'vfile';
 import { HTMLString } from './HTMLString.js';
 import rehypeCallouts from './callouts/index.js';
+import { defaultExcludeLanguages } from './highlight.js';
 import { loadPlugins } from './load-plugins.js';
 import { rehypeAutolinkOptions } from './rehype-autolink-headings.js';
 import { rehypeHeadingIds } from './rehype-collect-headings.js';
@@ -17,7 +18,6 @@ import { rehypePrism } from './rehype-prism.js';
 import { rehypeShiki } from './rehype-shiki.js';
 import { remarkCollectImages } from './remark-collect-images.js';
 import remarkDiscordSubtext from './remark-discord-subtext.js';
-import { defaultExcludeLanguages } from './highlight.js';
 import type {
 	MarkdownProcessor,
 	MarkdownProcessorRenderResult,
@@ -179,8 +179,10 @@ export async function createMarkdownProcessor(
 
 	// Syntax highlighting
 	if (syntaxHighlight) {
-		const syntaxHighlightType = typeof syntaxHighlight === 'string' ? syntaxHighlight : syntaxHighlight?.type;
-		const excludeLangs = typeof syntaxHighlight === 'object' ? syntaxHighlight?.excludeLangs : undefined;
+		const syntaxHighlightType =
+			typeof syntaxHighlight === 'string' ? syntaxHighlight : syntaxHighlight?.type;
+		const excludeLangs =
+			typeof syntaxHighlight === 'object' ? syntaxHighlight?.excludeLangs : undefined;
 
 		if (syntaxHighlightType === 'shiki') {
 			parser.use(rehypeShiki, shikiConfig, excludeLangs);
@@ -247,7 +249,7 @@ export async function createMarkdownProcessor(
 				metadata: {
 					headings: result.data.astro?.headings ?? [],
 					localImagePaths: result.data.astro?.localImagePaths ?? [],
- 					remoteImagePaths: result.data.astro?.remoteImagePaths ?? [],
+					remoteImagePaths: result.data.astro?.remoteImagePaths ?? [],
 					frontmatter: result.data.astro?.frontmatter ?? {},
 				},
 			};

@@ -1,6 +1,6 @@
+import type { Properties, Root } from 'hast';
 import { visit } from 'unist-util-visit';
 import type { VFile } from 'vfile';
-import type { Properties, Root } from 'hast';
 
 /**
  * A rehype plugin to process image elements in the AST.
@@ -14,7 +14,7 @@ import type { Properties, Root } from 'hast';
  */
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function rehypeImages() {
-	return function (tree: Root, file: VFile) {
+	return (tree: Root, file: VFile) => {
 		if (!file.data.astro?.localImagePaths?.length && !file.data.astro?.remoteImagePaths?.length) {
 			// No images to transform, nothing to do.
 			return;

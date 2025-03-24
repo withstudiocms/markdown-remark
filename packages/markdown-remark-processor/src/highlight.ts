@@ -25,9 +25,9 @@ export const defaultExcludeLanguages = ['math'];
  *   highlighted `<pre>` element.
  */
 export async function highlightCodeBlocks(
-	tree: Root, 
+	tree: Root,
 	highlighter: Highlighter,
-	excludeLanguages: string[] = [],
+	excludeLanguages: string[] = []
 ): Promise<void> {
 	const nodes: Array<{
 		node: Element;
