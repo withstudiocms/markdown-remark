@@ -5,8 +5,7 @@
   "fixed": [
     [
       "@studiocms/markdown-remark",
-      "@studiocms/markdown-remark-processor",
-      "@studiocms/markdown-remark-processor-web"
+      "@studiocms/markdown-remark-processor"
     ]
   ],
   "linked": [],

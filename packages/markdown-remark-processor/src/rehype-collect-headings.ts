@@ -22,7 +22,9 @@ const codeTagNames = new Set(['code', 'pre']);
  * 4. Generates a unique slug for each heading and assigns it as the `id` property.
  * 5. Stores the collected headings in the file's `astro.headings` property.
  */
-export function rehypeHeadingIds(): ReturnType<RehypePlugin> {
+export function rehypeHeadingIds({
+	experimentalHeadingIdCompat,
+}: { experimentalHeadingIdCompat?: boolean } = {}): ReturnType<RehypePlugin> {
 	return (tree, file) => {
 		const headings: MarkdownHeading[] = [];
 		const frontmatter = file.data.astro?.frontmatter;
@@ -72,7 +74,9 @@ export function rehypeHeadingIds(): ReturnType<RehypePlugin> {
 			if (typeof node.properties.id !== 'string') {
 				let slug = slugger.slug(text);
 
-				if (slug.endsWith('-')) slug = slug.slice(0, -1);
+				if (!experimentalHeadingIdCompat) {
+					if (slug.endsWith('-')) slug = slug.slice(0, -1);
+				}
 
 				node.properties.id = slug;
 			}

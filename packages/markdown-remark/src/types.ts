@@ -31,9 +31,13 @@ export interface RenderResponse {
 		headings: MarkdownHeading[];
 
 		/**
-		 * An array of image paths found in the markdown document.
+		 * An array of local image paths found in the markdown document.
 		 */
-		imagePaths: string[];
+		localImagePaths: string[];
+		/**
+		 * An array of remote image paths found in the markdown document.
+		 */
+		remoteImagePaths: string[];
 
 		/**
 		 * The frontmatter data extracted from the markdown document.

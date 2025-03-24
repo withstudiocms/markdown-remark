@@ -5,6 +5,7 @@ import type { BuiltinTheme } from 'shiki';
 import type * as unified from 'unified';
 import type { HTMLString } from './HTMLString.js';
 import type { CreateShikiHighlighterOptions, ShikiHighlighterHighlightOptions } from './shiki.js';
+import type { RemotePattern } from '@astrojs/internal-helpers/remote';
 
 export type { Node } from 'unist';
 
@@ -15,6 +16,8 @@ declare module 'vfile' {
 		astro: {
 			headings?: MarkdownHeading[];
 			imagePaths?: string[];
+			localImagePaths?: string[];
+			remoteImagePaths?: string[];
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			frontmatter?: Record<string, any>;
 		};
@@ -43,12 +46,22 @@ export type RemarkRehype = RemarkRehypeOptions;
 
 export type ThemePresets = BuiltinTheme | 'css-variables';
 
+export type SyntaxHighlightConfigType = 'shiki' | 'prism';
+
+export interface SyntaxHighlightConfig {
+	type: SyntaxHighlightConfigType;
+	excludeLangs?: string[];
+}
+
 export interface ShikiConfig
 	extends Pick<CreateShikiHighlighterOptions, 'langs' | 'theme' | 'themes' | 'langAlias'>,
 		Pick<ShikiHighlighterHighlightOptions, 'defaultColor' | 'wrap' | 'transformers'> {}
 
+/**
+ * Configuration options that end up in the markdown section of AstroConfig
+ */
 export interface AstroMarkdownOptions {
-	syntaxHighlight?: 'shiki' | 'prism' | false;
+	syntaxHighlight?: SyntaxHighlightConfig | SyntaxHighlightConfigType | false;
 	shikiConfig?: ShikiConfig;
 	remarkPlugins?: RemarkPlugins;
 	rehypePlugins?: RehypePlugins;
@@ -71,6 +84,15 @@ export interface StudioCMSMarkdownOptions extends AstroMarkdownOptions {
 	studiocms?: StudioCMSConfigOptions | false;
 }
 
+export interface StudioCMSMarkdownProcessorOptions extends StudioCMSMarkdownOptions {
+	image?: {
+		domains?: string[];
+		remotePatterns?: RemotePattern[];
+	};
+	experimentalHeadingIdCompat?: boolean;
+}
+
+
 export interface MarkdownProcessor {
 	render: (
 		content: string,
@@ -85,13 +107,13 @@ export interface MarkdownProcessorRenderOptions {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	frontmatter?: Record<string, any>;
 }
-
 export interface MarkdownProcessorRenderResult {
 	code: string;
 	astroHTML: HTMLString;
 	metadata: {
 		headings: MarkdownHeading[];
-		imagePaths: string[];
+		localImagePaths: string[];
+		remoteImagePaths: string[];
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		frontmatter: Record<string, any>;
 	};

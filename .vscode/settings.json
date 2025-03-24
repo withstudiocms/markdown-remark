@@ -6,7 +6,17 @@
   },
   "editor.defaultFormatter": "biomejs.biome",
   "editor.gotoLocation.multipleDefinitions": "goto",
-  "cSpell.words": ["mdast", "mergebot", "Shiki", "studiocms", "vitest", "withstudiocms"],
+  "cSpell.words": [
+    "mdast",
+    "mergebot",
+    "metastring",
+    "nord",
+    "Shiki",
+    "smol",
+    "studiocms",
+    "vitest",
+    "withstudiocms"
+  ],
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   }

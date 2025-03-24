@@ -30,7 +30,7 @@ const dtsGen = {
 				execSync('tsc --emitDeclarationOnly -p tsconfig.json --outDir ./dist');
 				console.log(dim(`[${date}] `) + green('√ Generated TypeScript declarations'));
 			} catch (error) {
-				console.error(dim(`[${date}] `) + red(error));
+				console.error(dim(`[${date}] `) + red(`${error}\n\n${error.stdout.toString()}`));
 			}
 		});
 	},
