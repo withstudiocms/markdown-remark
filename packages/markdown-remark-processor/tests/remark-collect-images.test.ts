@@ -27,7 +27,7 @@ describe('collect images', () => {
 	});
 
 	it('should collect allowed remote image paths', async () => {
-		const markdown = `Hello ![inline remote image url](https://example.com/example.png)`;
+		const markdown = 'Hello ![inline remote image url](https://example.com/example.png)';
 		const fileURL = 'file.md';
 
 		const {
@@ -36,14 +36,16 @@ describe('collect images', () => {
 			// @ts-expect-error - fileURL is for internal testing and usage
 		} = await processor.render(markdown, { fileURL });
 
-		expect(code).toBe(`<p>Hello <img __ASTRO_IMAGE_="{&#x22;inferSize&#x22;:true,&#x22;src&#x22;:&#x22;https://example.com/example.png&#x22;,&#x22;alt&#x22;:&#x22;inline remote image url&#x22;,&#x22;index&#x22;:0}"></p>`);
+		expect(code).toBe(
+			`<p>Hello <img __ASTRO_IMAGE_="{&#x22;inferSize&#x22;:true,&#x22;src&#x22;:&#x22;https://example.com/example.png&#x22;,&#x22;alt&#x22;:&#x22;inline remote image url&#x22;,&#x22;index&#x22;:0}"></p>`
+		);
 
 		expect(localImagePaths).toEqual([]);
 		expect(remoteImagePaths).toEqual(['https://example.com/example.png']);
-	})
- 
+	});
+
 	it('should not collect other remote image paths', async () => {
-		const markdown = `Hello ![inline remote image url](https://google.com/google.png)`;
+		const markdown = 'Hello ![inline remote image url](https://google.com/google.png)';
 		const fileURL = 'file.md';
 
 		const {
@@ -52,14 +54,17 @@ describe('collect images', () => {
 			// @ts-expect-error - fileURL is for internal testing and usage
 		} = await processor.render(markdown, { fileURL });
 
-		expect(code).toBe(`<p>Hello <img src="https://google.com/google.png" alt="inline remote image url"></p>`);
+		expect(code).toBe(
+			`<p>Hello <img src="https://google.com/google.png" alt="inline remote image url"></p>`
+		);
 
 		expect(localImagePaths).toEqual([]);
 		expect(remoteImagePaths).toEqual([]);
 	});
 
 	it('should add image paths from definition', async () => {
-		const markdown = `Hello ![image ref][img-ref] ![remote image ref][remote-img-ref]\n\n[img-ref]: ./img.webp\n[remote-img-ref]: https://example.com/example.jpg`;
+		const markdown =
+			'Hello ![image ref][img-ref] ![remote image ref][remote-img-ref]\n\n[img-ref]: ./img.webp\n[remote-img-ref]: https://example.com/example.jpg';
 		const fileURL = 'file.md';
 
 		// @ts-expect-error - fileURL is for internal testing and usage
@@ -70,6 +75,6 @@ describe('collect images', () => {
 		);
 
 		expect(metadata.localImagePaths).toEqual(['./img.webp']);
-		expect(metadata.remoteImagePaths).toEqual(['https://example.com/example.jpg'])
+		expect(metadata.remoteImagePaths).toEqual(['https://example.com/example.jpg']);
 	});
 });
