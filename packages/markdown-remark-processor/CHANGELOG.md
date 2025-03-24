@@ -1,5 +1,11 @@
 # @studiocms/markdown-remark-processor
 
+## 1.2.0
+
+### Minor Changes
+
+- [#32](https://github.com/withstudiocms/markdown-remark/pull/32) [`06f0668`](https://github.com/withstudiocms/markdown-remark/commit/06f0668b4c50fff7d56e21006cded86748fecc2c) Thanks [@Adammatthiesen](https://github.com/Adammatthiesen)! - Update to support all features and functionality of `@astrojs/markdown-remark@6.3.1`
+
 ## 1.1.0
 
 ### Minor Changes
