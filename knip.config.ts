@@ -43,20 +43,9 @@ const config: KnipConfig = {
 			},
 		},
 		'packages/markdown-remark-processor': {
+			ignoreUnresolved: ['#import-plugin'],
 			entry: ['src/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}'],
 			project: ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}'],
-			astro: {
-				entry: ['src/**/*.astro'],
-				project: ['src/**/*.astro'],
-			},
-		},
-		'packages/markdown-remark-processor-web': {
-			entry: ['src/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}'],
-			project: ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}'],
-			astro: {
-				entry: ['src/**/*.astro'],
-				project: ['src/**/*.astro'],
-			},
 		},
 	},
 };
