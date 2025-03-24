@@ -1,6 +1,6 @@
 ---
-"@studiocms/markdown-remark-processor": patch
-"@studiocms/markdown-remark": patch
+"@studiocms/markdown-remark-processor": minor
+"@studiocms/markdown-remark": minor
 ---
 
 Update to support all features and functionality of `@astrojs/markdown-remark@6.3.1`
