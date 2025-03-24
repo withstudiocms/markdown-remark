@@ -12,6 +12,9 @@ type Highlighter = (
 
 const languagePattern = /\blanguage-(\S+)\b/;
 
+// Don’t highlight math code blocks by default.
+export const defaultExcludeLanguages = ['math'];
+
 /**
  * A hast utility to syntax highlight code blocks with a given syntax highlighter.
  *
@@ -21,7 +24,11 @@ const languagePattern = /\blanguage-(\S+)\b/;
  *   A function which receives the code and language, and returns the HTML of a syntax
  *   highlighted `<pre>` element.
  */
-export async function highlightCodeBlocks(tree: Root, highlighter: Highlighter): Promise<void> {
+export async function highlightCodeBlocks(
+	tree: Root, 
+	highlighter: Highlighter,
+	excludeLanguages: string[] = [],
+): Promise<void> {
 	const nodes: Array<{
 		node: Element;
 		language: string;
@@ -62,13 +69,14 @@ export async function highlightCodeBlocks(tree: Root, highlighter: Highlighter):
 		}
 
 		// Don’t Highlight math code blocks.
-		if (languageMatch?.[1] === 'math') {
+		const language = languageMatch?.[1] || 'plaintext';
+		if (excludeLanguages.includes(language) || defaultExcludeLanguages.includes(language)) {
 			return;
 		}
 
 		nodes.push({
 			node,
-			language: languageMatch?.[1] || 'plaintext',
+			language,
 			parent,
 			// biome-ignore lint/style/noNonNullAssertion: <explanation>
 			grandParent: ancestors.at(-2)!,

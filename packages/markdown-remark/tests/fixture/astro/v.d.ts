@@ -1,6 +1,6 @@
 declare module 'studiocms:markdown-remark' {
-	export const Markdown: typeof import('../../../src/integration/markdown').Markdown;
-	export const render: typeof import('../../../src/integration/markdown').render;
+	export const Markdown: typeof import('../../../src/virtual-components.js').Markdown;
+	export const render: typeof import('../../../src/virtual-components.js').render;
 }
 
 declare module 'studiocms:markdown-remark/user-components' {

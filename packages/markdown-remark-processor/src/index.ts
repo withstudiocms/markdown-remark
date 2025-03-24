@@ -17,11 +17,14 @@ import { rehypePrism } from './rehype-prism.js';
 import { rehypeShiki } from './rehype-shiki.js';
 import { remarkCollectImages } from './remark-collect-images.js';
 import remarkDiscordSubtext from './remark-discord-subtext.js';
+import { defaultExcludeLanguages } from './highlight.js';
 import type {
 	MarkdownProcessor,
 	MarkdownProcessorRenderResult,
 	StudioCMSCalloutOptions,
 	StudioCMSMarkdownOptions,
+	StudioCMSMarkdownProcessorOptions,
+	SyntaxHighlightConfig,
 } from './types.js';
 
 export { rehypeAutoLink };
@@ -53,8 +56,13 @@ export {
 export { HTMLString } from './HTMLString.js';
 export * from './types.js';
 
+export const syntaxHighlightDefaults: Required<SyntaxHighlightConfig> = {
+	type: 'shiki',
+	excludeLangs: defaultExcludeLanguages,
+};
+
 export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {
-	syntaxHighlight: 'shiki',
+	syntaxHighlight: syntaxHighlightDefaults,
 	shikiConfig: {
 		langs: [],
 		theme: 'github-dark',
@@ -101,7 +109,7 @@ export const markdownConfigDefaults: Required<StudioCMSMarkdownOptions> = {
  * @public
  */
 export async function createMarkdownProcessor(
-	opts?: StudioCMSMarkdownOptions
+	opts?: StudioCMSMarkdownProcessorOptions
 ): Promise<MarkdownProcessor> {
 	const {
 		syntaxHighlight = markdownConfigDefaults.syntaxHighlight,
@@ -112,6 +120,7 @@ export async function createMarkdownProcessor(
 		gfm = markdownConfigDefaults.gfm,
 		smartypants = markdownConfigDefaults.smartypants,
 		studiocms = markdownConfigDefaults.studiocms,
+		experimentalHeadingIdCompat = false,
 	} = opts ?? {};
 
 	let autolink = true;
@@ -159,7 +168,7 @@ export async function createMarkdownProcessor(
 	}
 
 	// Apply later in case user plugins resolve relative image paths
-	parser.use(remarkCollectImages);
+	parser.use(remarkCollectImages, opts?.image);
 
 	// Remark -> Rehype
 	parser.use(remarkRehype, {
@@ -169,10 +178,15 @@ export async function createMarkdownProcessor(
 	});
 
 	// Syntax highlighting
-	if (syntaxHighlight === 'shiki') {
-		parser.use(rehypeShiki, shikiConfig);
-	} else if (syntaxHighlight === 'prism') {
-		parser.use(rehypePrism);
+	if (syntaxHighlight) {
+		const syntaxHighlightType = typeof syntaxHighlight === 'string' ? syntaxHighlight : syntaxHighlight?.type;
+		const excludeLangs = typeof syntaxHighlight === 'object' ? syntaxHighlight?.excludeLangs : undefined;
+
+		if (syntaxHighlightType === 'shiki') {
+			parser.use(rehypeShiki, shikiConfig, excludeLangs);
+		} else if (syntaxHighlightType === 'prism') {
+			parser.use(rehypePrism, excludeLangs);
+		}
 	}
 
 	// User rehype plugins
@@ -181,10 +195,10 @@ export async function createMarkdownProcessor(
 	}
 
 	// Images / Assets support
-	parser.use(rehypeImages());
+	parser.use(rehypeImages);
 
 	// Headings
-	parser.use(rehypeHeadingIds);
+	parser.use(rehypeHeadingIds, { experimentalHeadingIdCompat });
 
 	// Autolink headings
 	if (autolink) {
@@ -232,7 +246,8 @@ export async function createMarkdownProcessor(
 				astroHTML: new HTMLString(result.value),
 				metadata: {
 					headings: result.data.astro?.headings ?? [],
-					imagePaths: result.data.astro?.imagePaths ?? [],
+					localImagePaths: result.data.astro?.localImagePaths ?? [],
+ 					remoteImagePaths: result.data.astro?.remoteImagePaths ?? [],
 					frontmatter: result.data.astro?.frontmatter ?? {},
 				},
 			};
