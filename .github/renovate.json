@@ -26,5 +26,6 @@
       "matchFileNames": [".node-version"],
       "enabled": false
     }
-  ]
+  ],
+  "minimumReleaseAge": "3 days"
 }

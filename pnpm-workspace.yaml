@@ -1,6 +1,18 @@
 packages:
-  - "packages/*"
-  - "packages/*/tests/fixture/*"
-  - "scripts"
-  - "playground"
-  - "www/*"
+  - packages/*
+  - packages/*/tests/fixture/*
+  - scripts
+  - playground
+  - www/*
+
+minimumReleaseAge: 4320
+
+minimumReleaseAgeExclude:
+  - studiocms
+  - '@studiocms/*'
+  - '@withstudiocms/*'
+
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - esbuild
+  - sharp
