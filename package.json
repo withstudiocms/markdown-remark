@@ -31,7 +31,7 @@
     "@vitest/ui": "3.0.5",
     "jest-extended": "^4.0.2",
     "knip": "^5.46.0",
-    "pkg-pr-new": "^0.0.41",
+    "pkg-pr-new": "^0.0.63",
     "run-scripts": "workspace:*",
     "typescript": "^5.7.3",
     "vitest": "^3.0.5"
