@@ -34,7 +34,7 @@
     "test": "pnpm build && vitest run"
   },
   "dependencies": {
-    "@astrojs/internal-helpers": "^0.6.1",
+    "@astrojs/internal-helpers": "^0.7.0",
     "@astrojs/prism": "^3.2.0",
     "github-slugger": "^2.0.0",
     "hastscript": "^9.0.0",
