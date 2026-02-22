@@ -1,6 +1,0 @@
-packages:
-  - "packages/*"
-  - "packages/*/tests/fixture/*"
-  - "scripts"
-  - "playground"
-  - "www/*"

@@ -1,8 +1,0 @@
-{
-  "recommendations": [
-    "astro-build.astro-vscode",
-    "biomejs.biome",
-    "streetsidesoftware.code-spell-checker"
-  ],
-  "unwantedRecommendations": []
-}
